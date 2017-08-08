@@ -1,0 +1,188 @@
+/*MENU*/
+
+
+/*RODAPÉ*/
+.site {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important; /* 1, 3 */
+  background-color: #F5F5F5;
+}
+
+.site-footer {
+  flex: none; /* 2 */
+}
+
+.site-content {
+  flex: 1 0 auto; /* 2 */
+  padding: var(--space) var(--space) 0;
+  width: 100%;
+}
+
+.fixed-footer {
+  flex: 1 !important;
+}
+
+/*CONTEÚDO*/
+.margin-top {
+  margin-top: 7em !important;
+}
+
+.margin-top-grupo {
+  margin-top: 4em !important;
+}
+
+.margin-bottom {
+  margin-bottom: 7em !important;
+}
+
+.middle-content {
+  overflow: auto;
+}
+
+.admin-content {
+  width: 100%;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.scrollable {
+  height: 302px;
+  overflow: auto;
+}
+
+.geral li details summary:hover, .geral li:hover {
+  cursor: pointer;
+}
+
+.ui.message.instituicao:hover {
+  cursor: pointer;
+}
+
+.cor {
+  position: relative;
+  overflow: hidden;
+}
+
+.ui.icon.header i.icons .corner.icon {
+  font-size: 1.5em !important;
+}
+
+.home-link:hover {
+  cursor: pointer;
+}
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aligner-item {
+  max-width: 50%;
+}
+
+.sobre {
+  text-align: justify;
+  text-indent: 50px;
+}
+
+.sobre::first-letter {
+  text-transform: capitalize;
+}
+
+/*RESPONSIVIDADE*/
+/* Mobile */
+@media only screen and (max-width: 767px) {
+  [class*="mobile hidden"],
+  [class*="tablet only"]:not(.mobile),
+  [class*="computer only"]:not(.mobile),
+  [class*="large screen only"]:not(.mobile),
+  [class*="widescreen only"]:not(.mobile),
+  [class*="or lower hidden"] {
+    display: none !important;
+  }
+  .margin {
+    margin-top: 40px !important;
+  }
+
+  .ui.stackable.buttons{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .ui.stackable.buttons > .button{
+    width: 100%;
+    border-radius: 0 !important;
+  }
+
+}
+
+/* Tablet / iPad Portrait */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  [class*="mobile only"]:not(.tablet),
+  [class*="tablet hidden"],
+  [class*="computer only"]:not(.tablet),
+  [class*="large screen only"]:not(.tablet),
+  [class*="widescreen only"]:not(.tablet),
+  [class*="or lower hidden"]:not(.mobile) {
+    display: none !important;
+  }
+  .margin-top {
+    margin-top: 7em !important;
+  }
+}
+
+/* Computer / Desktop / iPad Landscape */
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  [class*="mobile only"]:not(.computer),
+  [class*="tablet only"]:not(.computer),
+  [class*="computer hidden"],
+  [class*="large screen only"]:not(.computer),
+  [class*="widescreen only"]:not(.computer),
+  [class*="or lower hidden"]:not(.tablet):not(.mobile) {
+    display: none !important;
+  }
+  .padding {
+    padding-left: 250px;
+  }
+}
+
+/* Large Monitor */
+@media only screen and (min-width: 1200px) and (max-width: 1919px) {
+  [class*="mobile only"]:not([class*="large screen"]),
+  [class*="tablet only"]:not([class*="large screen"]),
+  [class*="computer only"]:not([class*="large screen"]),
+  [class*="large screen hidden"],
+  [class*="widescreen only"]:not([class*="large screen"]),
+  [class*="or lower hidden"]:not(.computer):not(.tablet):not(.mobile) {
+    display: none !important;
+  }
+  .padding {
+    padding-left: 250px;
+  }
+}
+
+/* Widescreen Monitor */
+@media only screen and (min-width: 1920px) {
+  [class*="mobile only"]:not([class*="widescreen"]),
+  [class*="tablet only"]:not([class*="widescreen"]),
+  [class*="computer only"]:not([class*="widescreen"]),
+  [class*="large screen only"]:not([class*="widescreen"]),
+  [class*="widescreen hidden"],
+  [class*="widescreen or lower hidden"] {
+    display: none !important;
+  }
+  .padding {
+    padding-left: 250px;
+  }
+}
