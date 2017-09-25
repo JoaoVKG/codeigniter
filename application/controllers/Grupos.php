@@ -5,6 +5,7 @@ class Grupos extends CI_Controller {
   public function __construct() {
     parent::__construct();
     $this->load->model('grupo_model');
+    $this->load->model('post_model');
     $this->load->helper('url_helper');
   }
 
@@ -18,6 +19,7 @@ class Grupos extends CI_Controller {
 
   public function grupo($slug) {
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
+    $data['posts'] = $this->post_model->getPrimeiros5PostsByGrupo($slug);
     if(empty($data['grupo'])) {
       redirect('/', 'refresh');
     }
@@ -25,17 +27,6 @@ class Grupos extends CI_Controller {
 
     $this->load->view('templates/header', $data);
     $this->load->view('grupos/grupo', $data);
-    $this->load->view('templates/footer');
-  }
-
-  public function participantes($slug) {
-    $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
-    $data['participantes'] = $this->grupo_model->getParticipantesBySlug($slug);
-
-    $data['title'] = 'Participantes do grupo ' . $data['grupo']['nome'];
-
-    $this->load->view('templates/header', $data);
-    $this->load->view('grupos/participantes', $data);
     $this->load->view('templates/footer');
   }
 
@@ -50,36 +41,71 @@ class Grupos extends CI_Controller {
 
   }
 
-  public function admin($slug) {
-    $this->load->library('form_validation');
+  public function participantes($slug) {
+    $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
+    $data['participantes'] = $this->grupo_model->getCriadorParticipantesBySlug($slug);
+
+    $data['title'] = 'Participantes do grupo ' . $data['grupo']['nome'];
+
+    $this->load->view('templates/header', $data);
+    $this->load->view('grupos/participantes', $data);
+    $this->load->view('templates/footer');
+  }
+
+  public function gerenciarparticipantes($slug) {
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['title'] = 'Administração '.$data['grupo']['nome'];
+    $data['aprovado'] = null;
+    $data['pode_editar_grupo'] = null;
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
-      $data['esta_no_grupo'] = $this->grupo_model->getGrupoByIdUserId($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['pode_editar_grupo'] = $this->grupo_model->getGrupoByIdUserIdPodeEditar($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
     }
-    $this->form_validation->set_rules('senha', 'senha', 'required|callback_check_senha['.$slug.']');
 
-    if($this->form_validation->run() === FALSE && (!array_key_exists($slug, $_SESSION) || $_SESSION[$slug] === FALSE)) {
-      $this->load->view('grupos/senha', $data);
+    if ($data['aprovado']) {
+      $data['solicitacoes'] = $this->grupo_model->getSolicitacoesPendentes($data['grupo']['slug']);
+      $data['participantes'] = $this->grupo_model->getParticipantesBySlug($data['grupo']['slug']);
+      $this->load->view('templates/headeradmin', $data);
+      $this->load->view('grupos/gerenciarparticipantes');
+      $this->load->view('templates/footeradmin');
     } else {
-      $this->load->view('grupos/admin', $data);
+      redirect('/gerenciar-grupos', 'refresh');
     }
   }
 
-  public function menu_admin() {
-    $id = $this->input->post('id');
-    switch($id) {
-      case 1:
-      echo $this->load->view('grupos/criarpost', NULL, TRUE);
-      break;
-      case 2:
-      echo $id;
-      break;
-      case 3:
-      echo $id;
-      break;
-      default:
+  public function gerenciar($slug) {
+    $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
+    $data['title'] = 'Administração '.$data['grupo']['nome'];
+    $data['aprovado'] = null;
+    if(isset($_SESSION['usuario_logado']['id_usuario'])) {
+      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+    }
 
+    if ($data['aprovado']) {
+      $data['solicitacoes'] = $this->grupo_model->getSolicitacoesPendentes($data['grupo']['slug']);
+      $this->load->view('templates/headeradmin', $data);
+      $this->load->view('grupos/editar');
+      $this->load->view('templates/footeradmin');
+    } else {
+      redirect('/gerenciar-grupos', 'refresh');
+    }
+  }
+
+  public function solicitacoes($slug) {
+    $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
+    $data['title'] = 'Administração '.$data['grupo']['nome'];
+    $data['aprovado'] = null;
+    if(isset($_SESSION['usuario_logado']['id_usuario'])) {
+      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+    }
+
+    if ($data['aprovado']) {
+      $data['solicitacoes'] = $this->grupo_model->getSolicitacoesPendentes($data['grupo']['slug']);
+      $this->load->view('templates/headeradmin', $data);
+      $this->load->view('grupos/solicitacoespendentes', $data);
+      $this->load->view('templates/footeradmin');
+    } else {
+      redirect('/gerenciar-grupos', 'refresh');
     }
   }
 
@@ -87,17 +113,18 @@ class Grupos extends CI_Controller {
     $this->load->library('form_validation');
     $this->load->model('area_model');
     $this->load->model('instituicao_model');
-    $data['title'] = 'Gerencie seus grupos';
+    $this->load->model('usuario_model');
+    $data['title'] = 'Entre em um grupo';
     $data['grupos'] = $this->grupo_model->getgrupos();
     $data['area_grupo'] = $this->getGruposAreas();
     $data['areas'] = $this->area_model->getAreas();
     $data['instituicoes'] = $this->instituicao_model->getInstituicao();
+    $data['solicitacoes'] = $this->usuario_model->getSolicitacoesUsuario($_SESSION['usuario_logado']['id_usuario']);
 
     $this->form_validation->set_rules('nome', 'nome', 'required');
     $this->form_validation->set_rules('link', 'link', 'required|is_unique[grupo.slug]');
     $this->form_validation->set_rules('sobre', 'sobre o grupo', 'required');
     $this->form_validation->set_rules('email', 'email', 'required|valid_email');
-    $this->form_validation->set_rules('senha', 'senha', 'required');
     $this->form_validation->set_rules('area', 'área do conhecimento', 'required');
     $this->form_validation->set_rules('instituicao', 'instituição', 'required');
     $this->form_validation->set_rules('cor', 'cor');
@@ -109,7 +136,7 @@ class Grupos extends CI_Controller {
     } else {
       $grupo = $this->grupo_model->setgrupo();
       if($grupo) {
-        redirect('gerenciar-grupos', 'refresh');
+        redirect('entre-em-um-grupo', 'refresh');
       } else {
         $this->load->view('templates/header', $data);
         $this->load->view('usuario/primeirospassos');
@@ -157,4 +184,17 @@ class Grupos extends CI_Controller {
       return FALSE;
     }
   }
+
+  public function gerenciargrupos() {
+    if(!isset($_SESSION['usuario_logado']['nome'])) {
+      redirect('/', 'refresh');
+    } else {
+        $data['title'] = 'Gerenciar grupos';
+        $id_usuario = $_SESSION['usuario_logado']['id_usuario'];
+        $data['grupos'] = $this->grupo_model->getGruposEditaveis($id_usuario);
+        $this->load->view('templates/header', $data);
+        $this->load->view('grupos/gerenciargrupos');
+      } 
+    }
+
 }

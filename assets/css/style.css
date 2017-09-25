@@ -24,6 +24,12 @@
 }
 
 /*CONTEÚDO*/
+.quill-fix {
+  white-space: normal !important;
+}
+img {
+  max-width: 100% !important;
+}
 .margin-top {
   margin-top: 7em !important;
 }
@@ -37,10 +43,12 @@
 }
 
 .middle-content {
+  height: 100% !important;
   overflow: auto;
 }
 
 .admin-content {
+  height: 100% !important;
   width: 100%;
 }
 

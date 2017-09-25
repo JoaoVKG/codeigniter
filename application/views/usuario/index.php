@@ -6,7 +6,7 @@ if(!isset($_SESSION['usuario_logado']['nome'])) {
 <div class="site-content margin-top margin-bottom ui main container">
   <h3 class="ui header">Olá, <?php echo $_SESSION['usuario_logado']['nome']; ?>!</h3>
 
-  <div class="ui center aligned segment home-link" onclick="window.location='<?php echo base_url("gerenciar-grupos"); ?>'">
+  <div class="ui center aligned segment home-link" onclick="window.location='<?php echo base_url("entre-em-um-grupo"); ?>'">
     <h3 class="ui icon header">
       <i class="icons">
         <i class="users icon"></i>
@@ -32,7 +32,7 @@ if(!isset($_SESSION['usuario_logado']['nome'])) {
     </h3>
   </div>
 
-  <div class="ui center aligned segment home-link">
+  <div class="ui center aligned segment home-link" onclick="window.location='<?php echo base_url("gerenciar-grupos"); ?>'">
     <h3 class="ui icon header">
       <i class="icons">
         <i class="users icon"></i>

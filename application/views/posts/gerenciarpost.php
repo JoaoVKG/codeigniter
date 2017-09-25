@@ -1,0 +1,1 @@
+pagina com postagens feitas pelo usuario e postagens que ele é autorizado a editar por outros usuarios

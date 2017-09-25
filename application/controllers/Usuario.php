@@ -70,8 +70,6 @@ class Usuario extends CI_Controller {
     return FALSE;
   }
 
-
-
   public function logout() {
     $user_data = $this->session->all_userdata();
     foreach ($user_data as $key => $value) {
@@ -81,6 +79,23 @@ class Usuario extends CI_Controller {
     }
     $this->session->sess_destroy();
     redirect('/', 'refresh');
+  }
+
+  public function solicitaentrada($id_grupo) {
+    $usuario = $this->usuario_model->setSolicitacaoUsuario($id_grupo);
+    redirect('/entre-em-um-grupo', 'refresh');
+  }
+
+  public function aceitarsolicitacao() {
+    $id_grupo = $this->input->post('id_grupo');
+    $id_usuario = $this->input->post('id_usuario');
+    $admin = $this->usuario_model->isAdministrador($id_grupo);
+    if ($admin) {
+      $this->usuario_model->aprovarSolicitacao($id_grupo, $id_usuario);
+      echo true;
+    } else {
+      echo false;
+    }
   }
 
 

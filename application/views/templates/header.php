@@ -15,6 +15,8 @@
   <script src="<?php echo base_url('assets/js/jquery.dataTables.min.js'); ?>"></script>
   <script src="<?php echo base_url('assets/js/dataTables.semanticui.min.js'); ?>"></script>
   <script src="<?php echo base_url('semantic/dist/semantic.min.js'); ?>"></script>
+  <link type="text/css" rel="stylesheet" href="<?php echo base_url('assets/css/quill.snow.css'); ?>"  media="screen,projection"/>
+  <script type="text/javascript" src="<?php echo base_url('assets/js/quill.js'); ?>"></script>
 </head>
 <body class="site">
 

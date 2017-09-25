@@ -1,11 +1,8 @@
+<script type="text/javascript" src="<?php echo base_url('assets/js/highlight.pack.js'); ?>"></script>
 <link type="text/css" rel="stylesheet" href="<?php echo base_url('assets/css/quill.snow.css'); ?>"  media="screen,projection"/>
+<link type="text/css" rel="stylesheet" href="<?php echo base_url('assets/css/monokai-sublime.css'); ?>"/>
 <script type="text/javascript" src="<?php echo base_url('assets/js/quill.js'); ?>"></script>
 <style>
-#justHtml:Before {
-  color: slategrey;
-  font-weight: bold;
-  content: "Just Html with root.innerHTML";
-}
 
 /* Add you own css or copy it from the theme stylesheet
 */
@@ -28,8 +25,7 @@
 
 </style>
 
-<div class="site-content ui container segment" style="margin: 0px !important;">
-
+<div class="admin-content ui container segment" style="margin: 0px !important;">
   <div class="ui header">Escreva uma postagem</div>
   <?php
   if(validation_errors() != '') {
@@ -38,15 +34,28 @@
     $class = '';
   }
   $attributes = array('class' => "ui form $class");
-  echo form_open('posts/', $attributes); ?>
+  echo form_open("grupo/{$grupo['slug']}/criar-post", $attributes); ?>
+  <?php if(isset($_SESSION['sucesso'])) : ?>
+    <div class="ui positive message">
+      <div class="header">
+      Postagem feita com sucesso!
+      </div>
+      <p>Sua postagem está disponível para que outras pessoas possam lê-la.</p>
+      <p>
+      Você pode acessar ela por esse <a href="">link</a>.
+      </p>
+    </div>
+  <?php endif;?>
   <div class="field">
     <input type="text" name="titulo" placeholder="Título" required/>
   </div>
   <div class="field">
     <div id="editor"></div>
   </div>
-  <div id="justHtml" class="ql-editor"></div>
-  <textarea id="conteudo"></textarea>
+  <textarea id="conteudo" name="conteudo" hidden></textarea>
+  <div class="ui error message"></div>
+  <button type="submit" class="ui button fluid">Postar</button>
+
   <?= form_close(); ?>
 
 </div>
@@ -57,7 +66,7 @@ var toolbarOptions = [
   [{ 'align': [] }],
   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
   ['image', 'link'],
-
+  ['code-block'],
   [{ 'list': 'ordered'}, { 'list': 'bullet' }],
   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
   [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
@@ -68,6 +77,7 @@ var toolbarOptions = [
 
 var editor = new Quill('#editor', {
   modules: {
+    syntax: true,
     toolbar: toolbarOptions
 
   },
@@ -75,14 +85,45 @@ var editor = new Quill('#editor', {
   theme: 'snow'  // or 'bubble'
 });
 
-var justHtmlContent = document.getElementById('justHtml');
+
 var conteudo = document.getElementById('conteudo');
 
 editor.on('text-change', function() {
-  var text = editor.getText();
   var justHtml = editor.root.innerHTML;
-  justHtmlContent.innerHTML = justHtml;
   conteudo.innerHTML = justHtml;
-  console.log(justHtml);
+  var length = editor.getLength();
+  console.log(length);
+  // console.log(justHtml);
 });
+
+$.fn.form.settings.rules.isConteudoEmpty = function() {
+  if (editor.getLength() == 1) {
+    return false;
+  } else {
+    return true;
+  }
+};
+$('.ui.form').form({
+  fields: {
+    conteudo: {
+      identifier: 'conteudo',
+      rules: [
+        {
+          type: 'isConteudoEmpty',
+          prompt: 'O conteúdo não pode ser vazio.'
+        }
+      ]
+    },
+    titulo: {
+      identifier: 'titulo',
+      rules: [
+        {
+          type: 'empty',
+          prompt: 'O título não pode ser vazio.'
+        }
+      ]
+    }
+  }
+});
+
 </script>

@@ -12,24 +12,9 @@
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css'); ?>">
   <script src="<?php echo base_url('assets/js/jquery-3.1.1.min.js'); ?>" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script src="<?php echo base_url('semantic/dist/semantic.min.js'); ?>"></script>
-  <script>
-  $(document).ready(function(){
-    $(".opcao").click(function(){
-      var id = $(this).data("value");
-      $.ajax({
-        type: 'POST',
-        url: '<?php echo base_url("index.php/grupos/menu_admin"); ?>',
-        data: {'id':id},
-        success: function(result){
-          $("#conteudomenu").html(result);
-        }
-      });
-    });
-  });
-  </script>
 </head>
-<body class="">
-  <div class="pusher" style="height: 100% !important;">
+<body>
+  <div class="site">
     <div class="ui sidebar inverted vertical menu">
       <a class="item opcao" data-value="1">
       Escrever uma postagem
@@ -42,7 +27,7 @@
       </a>
     </div>
 
-    <div class="admin-content" style="height: 100% !important;">
+    <div class="admin-content">
       <div class="ui inverted fixed menu mobile only">
         <div class="ui container">
           <a class="item" onclick="$('.ui.sidebar').sidebar('toggle');">Opções</a>
@@ -64,28 +49,13 @@
         <div class="item">
           Olá, <?= $_SESSION['usuario_logado']['nome']?>
         </div>
-        
         <div class="item">
         </div>
-        <a class="item opcao" data-value="1">Escrever uma postagem</a>
-        <a class="item opcao" data-value="0">Gerenciar postagens</a>
-        <a class="item opcao" data-value="2">Editar informações do grupo</a>
-        <a class="item opcao" data-value="3">Solicitações pendentes</a>
-        <a class="item opcao" data-value="4">Gerenciar participantes</a>
+        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-posts')?>">Gerenciar postagens</a>
+        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/criar-post')?>">Escrever uma postagem</a>
+        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/editar-grupo')?>">Editar informações do grupo</a>
+        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/solicitacoes-pendentes')?>">Solicitações pendentes <div class="ui label"><?=count($solicitacoes);?></div></a>
+        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-participantes')?>">Gerenciar participantes</a>
       </div>
 
-      <div class="middle-content padding margin" id="conteudomenu" style="height: 100% !important;">
-        <div class="ui segment container">
-          <div class="ui text">
-          
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <script>
-  $('.ui.dropdown').dropdown();
-  </script>
-</body>
-</html>
+      <div class="middle-content padding margin">

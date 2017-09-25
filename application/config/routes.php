@@ -50,23 +50,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'pages/view';
+// usuario
 $route['login'] = 'usuario/login';
 $route['logout'] = 'usuario/logout';
 $route['cadastro'] = 'usuario/cadastro';
 $route['home'] = 'usuario/index';
+$route['enviarsolicitacao/(:num)'] = 'usuario/solicitaentrada/$1';
+
+// grupos
 $route['primeiros-passos'] = 'grupos/primeirospassos';
-$route['gerenciar-grupos'] = 'grupos/primeirospassos';
-$route['testeinstituicao'] = 'instituicao';
-$route['testearea'] = 'area/index';
-$route['sobre'] = 'pages/view/sobre';
+$route['entre-em-um-grupo'] = 'grupos/primeirospassos';
 $route['grupos'] = 'grupos/index';
+$route['grupo/(:any)'] = 'grupos/grupo/$1';
+$route['grupo/(:any)/participantes'] = 'grupos/participantes/$1';
+$route['grupo/(:any)/sobre'] = 'grupos/sobre/$1';
+
+// posts
+$route['grupo/(:any)/post/(:num)'] = 'posts/index/$1/$2';
+
+// administração do grupo
+$route['gerenciar-grupos'] = 'grupos/gerenciargrupos';
+
+$route['grupo/(:any)/gerenciar-posts'] = 'posts/gerenciar/$1';
+$route['grupo/(:any)/criar-post'] = 'posts/criar/$1';
+
+$route['grupo/(:any)/editar-grupo'] = 'grupos/gerenciar/$1';
+
+$route['grupo/(:any)/solicitacoes-pendentes'] = 'grupos/solicitacoes/$1';
+$route['grupo/(:any)/gerenciar-participantes'] = 'grupos/gerenciarparticipantes/$1';
+
+// pages
+$route['sobre'] = 'pages/view/sobre';
+
+// prototipação
 $route['news/create'] = 'news/create';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
-$route['grupo/(:any)'] = 'grupos/grupo/$1';
-$route['grupo/(:any)/participantes'] = 'grupos/participantes/$1';
-$route['grupo/(:any)/posts'] = 'posts/view/$1';
-$route['grupo/(:any)/sobre'] = 'grupos/sobre/$1';
-$route['grupo/(:any)/admin'] = 'grupos/admin/$1';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

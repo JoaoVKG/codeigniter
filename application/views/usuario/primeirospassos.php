@@ -14,12 +14,13 @@ if(validation_errors() != '') {
     <div class="ui segment">
 
       <h4 class="ui dividing header center aligned">Entre em um grupo</h4>
-      <table id="tabela_grupos" class="ui celled table" cellspacing="0" width="100%">
+      <table id="tabela_grupos" class="ui celled table tablet stackable" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th>Nome</th>
             <th>Grande área</th>
             <th>Área <i class="icon small chevron right"></i>Subárea <i class="icon small chevron right"></i>Especialidade</th>
+            <th>Ação</th>
           </tr>
         </thead>
         <tbody>
@@ -40,6 +41,18 @@ if(validation_errors() != '') {
               ?>
 
               <td><?php echo $area_subarea_especialidade;?></td>
+              <?php $acao = '<td><a href="enviarsolicitacao/'.$grupo_item['id_grupo'].'"><i class="sign in icon"></i> Enviar solicitação</a></td>';?>
+              <?php for ($i = 0; $i < sizeof($grupos); $i++) {
+                if(array_key_exists($i, $solicitacoes) && $solicitacoes[$i]['id_grupo'] == $grupo_item['id_grupo']) {
+                  if($solicitacoes[$i]['aprovado'] == true) {
+                    $acao = '<td><i class="checkmark icon"></i> Você está nesse grupo </td>';
+                  } else {
+                    $acao = '<td><i class="spinner loading icon"></i> Solicitação enviada</td>';
+                  }
+                }
+              }
+              echo $acao;
+              ?>
             </tr>
             <?php $index++; ?>
           <?php endforeach;?>
@@ -48,59 +61,46 @@ if(validation_errors() != '') {
       </table>
 
     </div>
-
-
     <div class="ui horizontal divider">Ou</div>
 
     <div class="ui center aligned segment">
       <h4 class="ui dividing header">Cadastre seu grupo</h4>
       <?php
       $attributes = array('class' => "ui form $class");
-      echo form_open('gerenciar-grupos', $attributes); ?>
+      echo form_open('entre-em-um-grupo', $attributes); ?>
       <div class="field">
         <label class="float-left">Nome do grupo</label>
         <div class="ui left icon input">
           <i class="users icon"></i>
-          <input type="text" name="nome" class="nome_grupo" placeholder="Nome do grupo" value="<?= set_value('nome_grupo'); ?>" required/>
+          <input type="text" name="nome" class="nome_grupo" placeholder="Nome do grupo" value="<?= set_value('nome'); ?>" required/>
         </div>
       </div>
       <div class="field">
         <label class="float-left">Link do grupo</label><i class="float-left large help circle icon" data-variation="very wide" data-html="O link será usado para que as pessoas consigam acessar a página do seu grupo. Ele não pode conter espaços, acentuações e letras maiúsculas. As palavras devem ser separadas por hífen (-).</br></br>Exemplo: nome-do-seu-grupo"></i>
         <div class="ui left icon input">
           <i class="linkify icon"></i>
-          <input type="text" name="link" class="link_grupo" placeholder="Link do grupo" value="<?= set_value('link_grupo'); ?>" required/>
+          <input type="text" name="link" class="link_grupo" placeholder="Link do grupo" value="<?= set_value('link'); ?>" required/>
         </div>
       </div>
       <div class="field">
         <label class="float-left">Sobre o grupo</label>
-        <textarea name="sobre" placeholder="Sobre o grupo" required></textarea>
+        <textarea name="sobre" placeholder="Sobre o grupo" required><?= set_value('sobre'); ?></textarea>
       </div>
-      <div class="two fields">
 
-        <div class="eleven wide field">
-          <label class="float-left">Email para contato</label>
-          <div class="ui left icon input">
-            <i class="mail icon"></i>
-            <input type="email" name="email" placeholder="Email para contato" value="<?= set_value('email'); ?>" required/>
-          </div>
+      <div class="field">
+        <label class="float-left">Email para contato</label>
+        <div class="ui left icon input">
+          <i class="mail icon"></i>
+          <input type="email" name="email" placeholder="Email para contato" value="<?= set_value('email'); ?>" required/>
         </div>
-
-        <div class="five wide field">
-          <label class="float-left">Senha da administração</label><i class="float-left large help circle icon" data-html="Essa senha será usada para que você e os outros membros possam acessar a área administrativa do grupo."></i>
-          <div class="ui left icon input">
-            <i class="lock icon"></i>
-            <input class="senha" type="password" name="senha" placeholder="Senha da administração" required/>
-          </div>
-        </div>
-
       </div>
 
       <div class="field area">
         <label class="float-left">Área do conhecimento</label>
         <div class="ui left icon input">
           <i class="book icon"></i>
-          <input hidden type="text" name="area" class="codigo_area_grupo" placeholder="Área do conhecimento" value="<?= set_value('area'); ?>" required/>
-          <input type="text" class="area_grupo" placeholder="Área do conhecimento" value="<?= set_value('area'); ?>" required/>
+          <input hidden type="text" name="area" class="codigo_area_grupo" placeholder="Área do conhecimento" required/>
+          <input type="text" class="area_grupo" placeholder="Área do conhecimento" required/>
         </div>
       </div>
 
@@ -122,7 +122,7 @@ if(validation_errors() != '') {
 
       <div class="field">
         <label class="float-left">Instituição de ensino</label>
-        <div class="ui input search selection dropdown">
+        <div class="ui search selection dropdown">
           <input type="hidden" name="instituicao" class="input instituicao" required>
           <i class="dropdown icon"></i>
           <div class="default text instituicao">Selecione sua instituição</div>
@@ -253,9 +253,9 @@ $(".captcha").prop('disabled', true);
 $( ".ui.message.instituicao" ).on("click", function() {
   $('.ui.modal.instituicao').modal({
     onHidden : function() {
+      $('.content.instituicoes').load('<?php echo base_url("index.php/instituicao/cadastro"); ?>');
       $(".cnpj_instituicao").prop('disabled', true);
       $(".captcha").prop('disabled', true);
-      $('.content.instituicoes').load('<?php echo base_url("index.php/instituicao/cadastro"); ?>');
     },
     onVisible : function() {
       $(".cnpj_instituicao").prop('disabled', false);
@@ -306,7 +306,8 @@ $( ".field.area" ).on("click focusin", function() {
 
 //cadastra uma instituicao
 $(".cadastro.instituicao").on("click", function() {
-  $(".cadastro.instituicao").prepend('<i class="spinner loading icon"></i>');
+  $(this).prepend('<i class="spinner loading icon"></i>');
+  $(this).addClass('disabled');
   $.ajax({
     type: 'POST',
     url: '<?php echo base_url("index.php/instituicao/pesquisaCnpj"); ?>',
@@ -318,6 +319,7 @@ $(".cadastro.instituicao").on("click", function() {
         $('.ui.form.modal').removeClass('success');
         erro = '<div class="ui error message cnpj-errado"><div class="header">Erro!</div><p>O CNPJ/captcha está errado.</p></div>';
         $(".cadastro.instituicao").children().remove();
+        $('.cadastro.instituicao').removeClass('disabled');
         //verifica se o elemento .existe não existe ainda
         if(!$('.error.message.cnpj-errado').length) {
           $(erro).insertAfter($('.captcha').parent());
@@ -359,6 +361,7 @@ $(".cadastro.instituicao").on("click", function() {
                   $('.nome_instituicao').val('');
                   $('.ui.form.modal').removeClass('error');
                   $('.spinner.loading.icon').remove();
+                  $('.cadastro.instituicao').removeClass('disabled');
                   $('.ui.form.modal').modal('hide');
 
                 }

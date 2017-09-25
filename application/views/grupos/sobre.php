@@ -1,6 +1,6 @@
 <div class="ui container site-content margin-top-grupo margin-bottom">
   <h1 class="ui centered header"><?= $grupo['nome'];?></h1>
-  <div class="ui stackable fluid three item secondary pointing menu">
+  <div class="ui fluid three item secondary pointing menu">
     <a href="../<?= $grupo['slug'];?>" class="item">
       Postagens
     </a>
