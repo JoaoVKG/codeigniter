@@ -48,8 +48,16 @@ img {
 }
 
 .admin-content {
+  flex: 1 0 auto; /* 2 */
+  padding: var(--space) var(--space) 0;
   height: 100% !important;
-  width: 100%;
+  width: 100% !important;
+}
+
+.admin-edit-content {
+  flex: 1 0 auto; /* 2 */
+  padding: var(--space) var(--space) 0;
+  width: 100% !important;
 }
 
 .float-left {
@@ -162,7 +170,7 @@ img {
   }
   .padding {
     padding-left: 250px;
-  }
+  } 
 }
 
 /* Large Monitor */

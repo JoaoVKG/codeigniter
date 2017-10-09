@@ -66,8 +66,20 @@ class Usuario_Model extends CI_Model {
     $this->db->update('usuario_grupo', $data);
   }
 
-  public function recusarSolicitacao() {
-    
+  public function atualizaParticipante($id_grupo, $id_usuario, $id_papel) { 
+    $data = array(
+      'id_papel' => $id_papel
+    );
+
+    $this->db->where('id_usuario', $id_usuario);
+    $this->db->where('id_grupo', $id_grupo);
+    $this->db->update('usuario_grupo', $data);
+  }
+
+  public function removeParticipante($id_grupo, $id_usuario) {
+    $this->db->where('id_usuario', $id_usuario);
+    $this->db->where('id_grupo', $id_grupo);
+    $this->db->delete('usuario_grupo');
   }
 
 }

@@ -34,11 +34,14 @@ class Posts extends CI_Controller {
   }
 
   public function gerenciar($slug) {
+    $this->load->model('usuario_model');
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['aprovado'] = null;
+    $data['admin'] = null;
     $data['title'] = 'Gerenciar postagem';
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
       $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['admin'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
     }
 
     if ($data['aprovado']) {
@@ -53,12 +56,15 @@ class Posts extends CI_Controller {
   }
 
   public function criar($slug) {
+    $this->load->model('usuario_model');
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['aprovado'] = null;
+    $data['admin'] = null;
     $data['title'] = 'Criar postagem';
     $this->load->library('form_validation');
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
       $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['admin'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
     }
 
     if ($data['aprovado']) {

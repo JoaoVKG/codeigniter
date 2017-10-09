@@ -41,7 +41,7 @@ class Grupo_Model extends CI_Model {
   
 
   public function getCriadorParticipantesBySlug($slug) {
-    $query = $this->db->query("SELECT u.nome, u.sobrenome, p.nome as papel from usuario u, papel p, grupo g, usuario_grupo ug WHERE g.slug = '" . $slug . "' AND g.id_grupo = ug.id_grupo AND ug.id_usuario = u.id_usuario AND ug.aprovado = true AND ug.id_papel = p.id_papel ORDER BY p.id_papel");
+    $query = $this->db->query("SELECT u.id_usuario, u.nome, u.email, u.sobrenome, ug.id_papel, ug.pode_editar_grupo, p.nome as papel from usuario u, papel p, grupo g, usuario_grupo ug WHERE g.slug = '" . $slug . "' AND g.id_grupo = ug.id_grupo AND ug.id_usuario = u.id_usuario AND ug.aprovado = true AND ug.id_papel = p.id_papel ORDER BY p.id_papel");
     return $query->result_array();
   }
 
@@ -82,6 +82,24 @@ class Grupo_Model extends CI_Model {
     );
 
     return $this->db->insert('usuario_grupo', $grupo_usuario);
+  }
+
+  public function updateGrupo() {
+    $this->load->model('instituicao_model');
+
+    $id_grupo = $this->input->post('id_grupo');
+
+    $data = array(
+      'nome' => $this->input->post('nome_grupo'),
+      'slug' => $this->input->post('link_grupo'),
+      'sobre' => $this->input->post('sobre_grupo'),
+      'email_contato' => $this->input->post('email_grupo'),
+      'area' => $this->input->post('area_grupo'),
+      'cor_primaria' => $this->input->post('cor_grupo'),
+      'id_instituicao' => $this->input->post('instituicao_grupo')
+    );
+    $this->db->where('id_grupo', $id_grupo);
+    $this->db->update('grupo', $data);
   }
 
 }

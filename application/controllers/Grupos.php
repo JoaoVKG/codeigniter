@@ -53,18 +53,18 @@ class Grupos extends CI_Controller {
   }
 
   public function gerenciarparticipantes($slug) {
+    $this->load->model('usuario_model');
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['title'] = 'Administração '.$data['grupo']['nome'];
     $data['aprovado'] = null;
-    $data['pode_editar_grupo'] = null;
+    $data['admin'] = true;
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
-      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
-      $data['pode_editar_grupo'] = $this->grupo_model->getGrupoByIdUserIdPodeEditar($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['aprovado'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
     }
 
     if ($data['aprovado']) {
       $data['solicitacoes'] = $this->grupo_model->getSolicitacoesPendentes($data['grupo']['slug']);
-      $data['participantes'] = $this->grupo_model->getParticipantesBySlug($data['grupo']['slug']);
+      $data['participantes'] = $this->grupo_model->getCriadorParticipantesBySlug($data['grupo']['slug']);
       $this->load->view('templates/headeradmin', $data);
       $this->load->view('grupos/gerenciarparticipantes');
       $this->load->view('templates/footeradmin');
@@ -74,11 +74,18 @@ class Grupos extends CI_Controller {
   }
 
   public function gerenciar($slug) {
+    $this->load->library('form_validation');
+    $this->load->model('area_model');
+    $this->load->model('instituicao_model');
+    $this->load->model('usuario_model');
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['title'] = 'Administração '.$data['grupo']['nome'];
+    $data['areas'] = $this->area_model->getAreas();
+    $data['instituicoes'] = $this->instituicao_model->getInstituicao();
     $data['aprovado'] = null;
+    $data['admin'] = true;
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
-      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['aprovado'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
     }
 
     if ($data['aprovado']) {
@@ -92,11 +99,13 @@ class Grupos extends CI_Controller {
   }
 
   public function solicitacoes($slug) {
+    $this->load->model('usuario_model');
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['title'] = 'Administração '.$data['grupo']['nome'];
     $data['aprovado'] = null;
+    $data['admin'] = true;
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
-      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['aprovado'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
     }
 
     if ($data['aprovado']) {
@@ -173,18 +182,6 @@ class Grupos extends CI_Controller {
     }
   }
 
-  public function check_senha($senha, $slug) {
-    $grupo = $this->grupo_model->getgrupobyslug($slug);
-    if($senha === $grupo['senha_admin']) {
-      $_SESSION[$slug] = TRUE;
-      return TRUE;
-    } else {
-      $_SESSION[$slug] = FALSE;
-      $this->form_validation->set_message('check_senha', 'Senha inválida!');
-      return FALSE;
-    }
-  }
-
   public function gerenciargrupos() {
     if(!isset($_SESSION['usuario_logado']['nome'])) {
       redirect('/', 'refresh');
@@ -194,7 +191,22 @@ class Grupos extends CI_Controller {
         $data['grupos'] = $this->grupo_model->getGruposEditaveis($id_usuario);
         $this->load->view('templates/header', $data);
         $this->load->view('grupos/gerenciargrupos');
-      } 
+    } 
+  }
+
+  public function atualiza() {
+    $this->load->model('usuario_model');
+    $data['aprovado'] = null;
+    $id_grupo = $this->input->post('id_grupo');
+
+    if(isset($_SESSION['usuario_logado']['id_usuario'])) {
+      $data['aprovado'] = $this->usuario_model->isAdministrador($id_grupo);
     }
+
+    if($data['aprovado']) {
+      $this->grupo_model->updateGrupo();
+      echo $this->input->post('link_grupo');
+    }
+  }
 
 }

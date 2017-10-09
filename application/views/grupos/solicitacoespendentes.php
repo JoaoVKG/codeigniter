@@ -27,16 +27,16 @@
 	</table>
 </div>
 
-<div class="ui small basic aprovar modal transition hidden">
+<div class="ui small basic modal transition hidden">
 	<div class="ui icon header" id="modal-header">
 	</div>
 	<div class="actions" style="text-align: center !important;">
-		<button href="" class="ui red cancel inverted button">
+		<div class="ui red cancel inverted button">
 			<i class="remove icon"></i> Não
-        </button>
-		<button class="ui green ok inverted button">
+        </div>
+		<div class="ui green ok inverted button">
 			<i class="checkmark icon"></i> Sim
-		</button>
+		</div>
 	</div>
 </div>
 
@@ -46,7 +46,9 @@
         id = $(this).data('id');
         var nome = $(this).data('nome');
         $('#modal-header').html('<i class="user icon"></i>  Aprovar ' + nome + '?');
-        $('.ui.basic.aprovar.modal').modal('show');
+        $('.ui.basic.modal').modal({
+			closable: true
+		}).modal('show');
     })
 
 	$('.button.ok').click(function() {
@@ -59,7 +61,6 @@
 					location.reload();
 				}
 			}
-			
 		})
 	})
 
@@ -73,7 +74,6 @@
 					location.reload();
 				}
 			}
-			
 		})
 	})
 </script>

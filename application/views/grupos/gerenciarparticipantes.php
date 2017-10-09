@@ -19,7 +19,7 @@
 					<?= $participante['email']; ?>
 				</td>
 				<td class="collapsing">
-                    <select class="ui dropdown">
+                    <select class="ui dropdown input-papel" data-id="<?= $participante['id_usuario']; ?>" data->
                         <option value="">Papel'</option>
                         <?php if($participante['id_papel'] == 1):?>
                             <option selected value="1">Líder</option>
@@ -31,7 +31,7 @@
                     </select>
                 </td>
                 <td class="collapsing center aligned">
-					<button class="ui negative button remover" data-id="<?= $participante['id_usuario']; ?>" data-nome="<?= $participante['nome'] . ' ' . $participante['sobrenome']; ?>">Aprovar</button>
+					<button class="ui negative button remover" <?php echo ($participante['pode_editar_grupo']) ? 'disabled' : '';?> data-id="<?= $participante['id_usuario']; ?>" data-nome="<?= $participante['nome'] . ' ' . $participante['sobrenome']; ?>"><i class="remove icon" style="margin: 0 !important;"></i></button>
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -40,32 +40,33 @@
 	</table>
 </div>
 
-<div class="ui small basic aprovar modal transition hidden">
+<div class="ui small basic modal transition hidden">
 	<div class="ui icon header" id="modal-header">
 	</div>
 	<div class="actions" style="text-align: center !important;">
-		<button href="" class="ui red cancel inverted button">
+		<div class="ui red cancel inverted button">
 			<i class="remove icon"></i> Não
-        </button>
-		<button class="ui green ok inverted button">
+        </div>
+		<div class="ui green ok inverted button">
 			<i class="checkmark icon"></i> Sim
-		</button>
+		</div>
 	</div>
 </div>
 
 <script>
 	var id;
-    $('.button.aprovar').click(function() {
+    $('.button.remover').click(function() {
         id = $(this).data('id');
         var nome = $(this).data('nome');
-        $('#modal-header').html('<i class="user icon"></i>  Aprovar ' + nome + '?');
-        $('.ui.basic.aprovar.modal').modal('show');
+        $('#modal-header').html('<i class="user icon"></i>  Remover ' + nome + ' do grupo?');
+        $('.ui.basic.modal').modal('show');
+        
     })
 
 	$('.button.ok').click(function() {
 		$.ajax({
 			type: 'POST',
-			url: '<?php echo base_url("index.php/usuario/aceitarsolicitacao"); ?>',
+			url: '<?php echo base_url("index.php/usuario/removeparticipante"); ?>',
 			data: {'id_grupo':<?= $grupo['id_grupo']?>, 'id_usuario': id},
 			success: function(result) {
 				if (result) {
@@ -76,17 +77,41 @@
 		})
 	})
 
-	$('.button.cancel').click(function() {
-		$.ajax({
+    $('.button.cancel').click(function() {
+        $('.ui.basic.modal').modal('close');
+    })
+
+    $('.input-papel').change(function() {
+        var id_usuario = $(this).data('id');
+        $.ajax({
 			type: 'POST',
-			url: '<?php echo base_url("index.php/usuario/recusarsolicitacao"); ?>',
-			data: {'id_grupo':<?= $grupo['id_grupo']?>, 'id_usuario': id},
+			url: '<?php echo base_url("index.php/usuario/atualizaparticipante"); ?>',
+			data: {'id_papel': $(this).val(), 'id_grupo':<?= $grupo['id_grupo']?>, 'id_usuario': id_usuario},
 			success: function(result) {
 				if (result) {
-					location.reload();
-				}
+					toastr.options = {
+					"closeButton": false,
+					"debug": false,
+					"newestOnTop": false,
+					"progressBar": false,
+					"positionClass": "toast-bottom-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "2500",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+					};
+
+					toastr["success"]("Papel alterado.", "Sucesso!");
+
+					
+				}		
 			}
-			
 		})
-	})
+    })
 </script>

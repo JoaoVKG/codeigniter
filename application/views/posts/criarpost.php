@@ -54,7 +54,7 @@
   </div>
   <textarea id="conteudo" name="conteudo" hidden></textarea>
   <div class="ui error message"></div>
-  <button type="submit" class="ui button fluid">Postar</button>
+  <button type="submit" class="ui grey button fluid">Publicar</button>
 
   <?= form_close(); ?>
 

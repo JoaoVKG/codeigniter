@@ -98,5 +98,43 @@ class Usuario extends CI_Controller {
     }
   }
 
+  public function recusarsolicitacao() {
+    $id_grupo = $this->input->post('id_grupo');
+    $id_usuario = $this->input->post('id_usuario');
+    $admin = $this->usuario_model->isAdministrador($id_grupo);
+    if ($admin) {
+      $this->usuario_model->removeParticipante($id_grupo, $id_usuario);
+      echo true;
+    } else {
+      echo false;
+    }
+  }
+
+  public function atualizaparticipante() {
+    $id_grupo = $this->input->post('id_grupo');
+    $id_usuario = $this->input->post('id_usuario');
+    $id_papel = $this->input->post('id_papel');
+
+    $admin = $this->usuario_model->isAdministrador($id_grupo);
+    if ($admin) {
+      $this->usuario_model->atualizaParticipante($id_grupo, $id_usuario, $id_papel);
+      echo true;
+    } else {
+      echo false;
+    }
+  }
+
+  public function removeparticipante() {
+    $id_grupo = $this->input->post('id_grupo');
+    $id_usuario = $this->input->post('id_usuario');
+    $admin = $this->usuario_model->isAdministrador($id_grupo);
+    if ($admin && $admin['id_usuario'] != $id_usuario) {
+      $this->usuario_model->removeParticipante($id_grupo, $id_usuario);
+      echo true;
+    } else {
+      echo false;
+    }
+  }
+
 
 }
