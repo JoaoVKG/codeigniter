@@ -42,6 +42,11 @@ class Posts extends CI_Controller {
     if(isset($_SESSION['usuario_logado']['id_usuario'])) {
       $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
       $data['admin'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
+      if ($data['admin']) {
+        $data['posts'] = $this->post_model->getPostsByAdminIdGrupoId($_SESSION['usuario_logado']['id_usuario'], $data['grupo']['id_grupo']);
+      } else {
+        $data['posts'] = $this->post_model->getPostsByUserIdGrupoId($_SESSION['usuario_logado']['id_usuario'], $data['grupo']['id_grupo']);
+      }
     }
 
     if ($data['aprovado']) {
@@ -52,7 +57,11 @@ class Posts extends CI_Controller {
     } else {
       redirect('/gerenciar-grupos', 'refresh');
     }
-    
+  }
+
+  public function deletarPost() {
+    $this->post_model->deletePost($this->input->post('id_post'));
+    echo true;
   }
 
   public function criar($slug) {
@@ -89,4 +98,43 @@ class Posts extends CI_Controller {
     }
   }
 
+  public function editar($slug, $id_post) {
+    $this->load->model('usuario_model');
+    $data['post'] = $this->post_model->getPostBySlugGrupoPostId($slug, $id_post);
+    $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
+    $data['aprovado'] = null;
+    $data['admin'] = null;
+    $data['title'] = 'Editar postagem';
+    $this->load->library('form_validation');
+    if(isset($_SESSION['usuario_logado']['id_usuario'])) {
+      $data['aprovado'] = $this->grupo_model->getGrupoByIdUserIdAprovado($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
+      $data['admin'] = $this->usuario_model->isAdministrador($data['grupo']['id_grupo']);
+    }
+
+    if ($data['aprovado']) {
+      $data['solicitacoes'] = $this->grupo_model->getSolicitacoesPendentes($data['grupo']['slug']);
+      $this->form_validation->set_rules('titulo', 'título', 'required');
+      $this->form_validation->set_rules('conteudo', 'conteúdo', 'required');
+      
+      if($this->form_validation->run() === FALSE) {
+        $this->load->view('templates/headeradmin', $data);
+        $this->load->view('posts/editarpost', $data);
+        $this->load->view('templates/footeradmin');
+      } else {
+        $postagem = $this->post_model->setPost($data['grupo']['id_grupo']);
+        if ($postagem) {
+          $_SESSION['sucesso'] = true;
+          $this->session->mark_as_flash('sucesso');
+          redirect("/grupo/{$slug}/criar-post");
+        }
+      }
+    } else {
+      redirect('/gerenciar-grupos', 'refresh');
+    }
+  }
+
+  public function editarPostagem() {
+    $this->post_model->updatePost();
+    echo true;
+  }
 }

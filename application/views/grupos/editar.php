@@ -97,6 +97,14 @@ if(validation_errors() != '') {
                 $('.text.instituicao').text($(this).data('value'));
               }
             })
+            $('.ui.search.selection.dropdown').change(function() {
+              var nome_instituicao = $('.input.instituicao').val();
+              $('.item.instituicao').each(function() {
+                if($(this).data('value') == nome_instituicao) {
+                  $('.input.instituicao').val($(this).data('id'));
+                }
+              })
+            })
           })
         </script>
         <div class="ui message instituicao" style="text-align: center !important">
@@ -286,7 +294,7 @@ $(".cadastro.instituicao").on("click", function() {
                 success: function(result) {
                   $('.default.text.instituicao').removeClass('default');
                   $('.text.instituicao').text(nome_fantasia);
-                  $('.input.instituicao').val(nome_fantasia);
+                  $('.input.instituicao').val(result);
                   $('.nome_instituicao').val('');
                   $('.ui.form.modal').removeClass('error');
                   $('.spinner.loading.icon').remove();

@@ -52,6 +52,16 @@ class Grupos extends CI_Controller {
     $this->load->view('templates/footer');
   }
 
+  public function contato($slug) {
+    $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
+   
+    $data['title'] = 'Contato do grupo ' . $data['grupo']['nome'];
+
+    $this->load->view('templates/header', $data);
+    $this->load->view('grupos/contato', $data);
+    $this->load->view('templates/footer');
+  }
+
   public function gerenciarparticipantes($slug) {
     $this->load->model('usuario_model');
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
@@ -142,6 +152,7 @@ class Grupos extends CI_Controller {
     if($this->form_validation->run() === FALSE) {
       $this->load->view('templates/header', $data);
       $this->load->view('usuario/primeirospassos');
+      $this->load->view('templates/footer');
     } else {
       $grupo = $this->grupo_model->setgrupo();
       if($grupo) {
@@ -149,6 +160,7 @@ class Grupos extends CI_Controller {
       } else {
         $this->load->view('templates/header', $data);
         $this->load->view('usuario/primeirospassos');
+        $this->load->view('templates/footer');
       }
     }
   }

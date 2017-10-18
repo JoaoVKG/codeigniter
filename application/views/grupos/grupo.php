@@ -1,6 +1,6 @@
 <div class="ui container site-content margin-top-grupo margin-bottom">
   <h1 class="ui centered header"><?= $grupo['nome'];?></h1>
-  <div class="ui  fluid three item secondary pointing menu">
+  <div class="ui fluid four item secondary pointing menu">
     <a href="<?= base_url("grupo/{$grupo['slug']}"); ?>" class="item active">
       Postagens
     </a>
@@ -10,7 +10,29 @@
     <a href="<?= base_url("grupo/{$grupo['slug']}/participantes"); ?>" class="item">
       Participantes
     </a>
+    <a href="<?= base_url("grupo/{$grupo['slug']}/contato"); ?>" class="item">
+      Contato
+    </a>
   </div>
+  <div class="ui icon message">
+    <i class="close icon"></i>
+    <i class="inbox icon"></i>
+    <div class="content">
+      <div class="header">
+        Marque a caixa abaixo para receber um email quando esse grupo fizer uma nova postagem!
+      </div>
+      <br>
+      <div class="ui checkbox">
+        <input type="checkbox" name="receber-email">
+        <label>Receber emails</label>
+      </div>
+    </div>
+  </div>
+  <script>
+    $('.message .close').on('click', function() {
+      $(this).closest('.message').transition('fade');
+    });
+  </script>
   <div class="ui segment posts">
     <?php foreach ($posts as $post) :?>
     <article class="post ql-editor quill-fix" data-id="<?= $post['id_post']?>">
@@ -22,7 +44,7 @@
     <div class="ui divider"></div>
     <?php endforeach; ?>
     <div class="ui large centered inline text loader">
-    Carregando postagens...
+      Carregando postagens...
     </div>
   </div>
 </div>

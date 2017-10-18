@@ -44,7 +44,7 @@ class Instituicao extends CI_Controller {
   }
 
   public function cadastrarInstituicao() {
-    $this->instituicao_model->setInstituicao();
+    return $this->instituicao_model->setInstituicao();
   }
 
 

@@ -64,9 +64,11 @@ $route['grupos'] = 'grupos/index';
 $route['grupo/(:any)'] = 'grupos/grupo/$1';
 $route['grupo/(:any)/participantes'] = 'grupos/participantes/$1';
 $route['grupo/(:any)/sobre'] = 'grupos/sobre/$1';
+$route['grupo/(:any)/contato'] = 'grupos/contato/$1';
 
 // posts
 $route['grupo/(:any)/post/(:num)'] = 'posts/index/$1/$2';
+$route['grupo/(:any)/editar-post/(:num)'] = 'posts/editar/$1/$2';
 
 // administração do grupo
 $route['gerenciar-grupos'] = 'grupos/gerenciargrupos';

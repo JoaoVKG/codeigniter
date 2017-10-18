@@ -24,7 +24,8 @@ class Instituicao_Model extends CI_Model {
       'nome' => $this->input->post('nome_instituicao')
     );
 
-    return $this->db->insert('instituicao', $data);
+    $this->db->insert('instituicao', $data);
+    return $this->db->insert_id();
   }
 
 }

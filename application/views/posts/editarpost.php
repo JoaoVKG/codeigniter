@@ -26,15 +26,15 @@
 </style>
 
 <div class="admin-content ui container segment" style="margin: 0px !important;">
-  <div class="ui header">Escrever uma postagem</div>
+  <div class="ui header">Editar postagem</div>
   <?php
   if(validation_errors() != '') {
     $class = 'error';
   } else {
     $class = '';
   }
-  $attributes = array('class' => "ui form $class");
-  echo form_open("grupo/{$grupo['slug']}/criar-post", $attributes); ?>
+  ?>
+  <form class="ui form <?=$class?>">
   <?php if(isset($_SESSION['sucesso'])) : ?>
     <div class="ui positive message">
       <div class="header">
@@ -47,16 +47,19 @@
     </div>
   <?php endif;?>
   <div class="field">
-    <input type="text" name="titulo" placeholder="Título" required/>
+    <input type="text" id="titulo" name="titulo" placeholder="Título" value="<?=$post['titulo']?>" required/>
   </div>
   <div class="field">
-    <div id="editor"></div>
+    <input type="date" id="data" name="data" placeholder="Data da postagem" value="<?=$post['data']?>" required/>
+  </div>
+  <div class="field">
+    <div id="editor"><?=$post['conteudo']?></div>
   </div>
   <textarea id="conteudo" name="conteudo" hidden></textarea>
   <div class="ui error message"></div>
-  <button type="submit" class="ui grey button fluid">Publicar</button>
+  <button type="button" id="btn-editar" class="ui grey button fluid">Editar</button>
 
-  <?= form_close(); ?>
+  </form>
 
 </div>
 <script>
@@ -87,14 +90,20 @@ var editor = new Quill('#editor', {
 
 
 var conteudo = document.getElementById('conteudo');
+var justHtml;
 
 editor.on('text-change', function() {
-  var justHtml = editor.root.innerHTML;
-  conteudo.innerHTML = justHtml;
-  var length = editor.getLength();
-  console.log(length);
+    justHtml = editor.root.innerHTML;
+    conteudo.innerHTML = justHtml;
+    var length = editor.getLength();
+    console.log(length);
   // console.log(justHtml);
 });
+
+$(document).ready(function() {
+    justHtml = editor.root.innerHTML;
+    conteudo.innerHTML = justHtml;
+})
 
 $.fn.form.settings.rules.isConteudoEmpty = function() {
   if (editor.getLength() == 1) {
@@ -126,6 +135,26 @@ $('.ui.form').form({
   }
 });
 
-
+$('#btn-editar').click(function() {
+    var id_post = <?=$post['id_post']?>;
+    var titulo_post = $("#titulo").val();
+    var data_post = $("#data").val();
+    var conteudo_post = justHtml;
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url("index.php/posts/editarPostagem"); ?>',
+        data: {
+            'id_post': id_post,
+            'titulo': titulo_post,
+            'data': data_post,
+            'conteudo': conteudo_post   
+        },
+        success: function(result) {
+            if (result) {
+                location.reload();
+            }
+        }	
+    })
+})
 
 </script>
