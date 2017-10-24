@@ -9,7 +9,7 @@
       <h4 class="ui dividing header center aligned">Entre em um grupo</h4>
       <?php foreach ($grupos as $grupo_item): ?>
 
-        <a href="grupo/<?php echo $grupo_item['slug'];?>"><?php echo $grupo_item['nome'];?></a>
+        <a href="<?= base_url("grupo/{$grupo['slug']}"); ?>"><?php echo $grupo_item['nome'];?></a>
 
       <?php endforeach;?>
     </div>

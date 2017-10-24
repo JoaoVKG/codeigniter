@@ -23,31 +23,36 @@
   <!-- Following Menu -->
   <div class="ui fixed menu">
     <div class="ui container">
-      <a class="active item" href="/codeigniter">Início</a>
-      <!-- <a class="item">Grupos</a> -->
+      <?php if(isset($_SESSION['usuario_logado']['nome'])): ?>
+        <a class="active item" href="<?php echo base_url('home');?>">Início</a>
+      <?php else: ?>
+      <a class="active item" href="<?php echo base_url();?>">Início</a>
+      <?php endif; ?>
+
       <?php $url_atual = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];?>
 
       <?php if(!isset($_SESSION['usuario_logado']['nome'])): ?>
 
         <div class="right menu">
           <?php if((strpos($url_atual,'login') === false)): ?>
-            <a href="/codeigniter/login" class="item entrar" style="border-right: 1px solid rgba(34,36,38,.1)">Entrar</a>
+            <a href="<?php echo base_url('login');?>" class="item entrar" style="border-right: 1px solid rgba(34,36,38,.1)">Entrar</a>
           <?php endif;?>
           <?php if((strpos($url_atual,'cadastro') === false)): ?>
-            <a href="cadastro" class="item cadastro" style="border-right: 1px solid rgba(34,36,38,.1)">Cadastro</a>
+            <a href="<?php echo base_url('cadastro');?>" class="item cadastro" style="border-right: 1px solid rgba(34,36,38,.1)">Cadastro</a>
           <?php endif;?>
         </div>
 
       <?php else: ?>
 
         <div class="right menu">
-          <div class="ui item menu-header dropdown" style="border-right: 1px solid rgba(34,36,38,.1)">
+          <div class="ui dropdown item menu-header" style="border-right: 1px solid rgba(34,36,38,.1)">
             <div class="text">
               <?= $_SESSION['usuario_logado']['nome'];?>
             </div>
             <i class="dropdown icon"></i>
             <div class="menu">
-              <a href="/codeigniter/logout" class="item">Sair</a>
+              <a href="<?php echo base_url('editar-perfil');?>" class="item"><i class="edit icon"></i> Editar perfil</a>
+              <a href="<?php echo base_url('logout');?>" class="item"><i class="sign out icon"></i> Sair</a>
             </div>
 
           </div>
@@ -61,7 +66,11 @@
 
   <!-- Sidebar Menu -->
   <div class="ui vertical inverted sidebar menu" id="side-menu">
-    <a class="active item" href="/">Início</a>
+    <?php if(isset($_SESSION['usuario_logado']['nome'])): ?>
+      <a class="active item" href="<?php echo base_url('home');?>">Início</a>
+    <?php else: ?>
+      <a class="active item" href="<?php echo base_url();?>">Início</a>
+    <?php endif; ?>
     <a class="item">Grupos</a>
     <?php if(!isset($_SESSION['usuario_logado']['nome'])): ?>
       <a class="item">Entrar</a>
@@ -70,5 +79,7 @@
   </div>
 
   <script>
-  $('.ui.menu-header.dropdown').dropdown();
+  $('.ui.dropdown').dropdown({
+    action: 'nothing'
+  });
   </script>

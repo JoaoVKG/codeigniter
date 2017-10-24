@@ -17,20 +17,20 @@
                 <?php echo $grupo['nome'];?>
               </td>
               <td>
-                <a href="grupo/<?php echo $grupo['slug'];?>/criar-post"><i class="write icon"></i> Escrever postagem</a> 
+                <a href="<?= base_url("grupo/{$grupo['slug']}/criar-post"); ?>"><i class="write icon"></i> Escrever postagem</a> 
               </td>
               <td>
-                <a href="grupo/<?php echo $grupo['slug'];?>/gerenciar-posts"><i class="settings icon"></i> Gerenciar postagens</a> 
+                <a href="<?= base_url("grupo/{$grupo['slug']}/gerenciar-posts"); ?>"><i class="settings icon"></i> Gerenciar postagens</a> 
               </td>
             </tr>
 
             <?php if ($grupo['pode_editar_grupo']): ?>
             <tr>
               <td>
-                <a href="grupo/<?php echo $grupo['slug'];?>/editar-grupo"><i class="settings icon"></i> Gerenciar grupo</a> 
+                <a href="<?= base_url("grupo/{$grupo['slug']}/editar-grupo"); ?>"><i class="settings icon"></i> Gerenciar grupo</a> 
               </td>
               <td>
-                <a href="grupo/<?php echo $grupo['slug'];?>/solicitacoes-pendentes"><i class="users icon"></i> Solicitações pendentes</a> 
+                <a href="<?= base_url("grupo/{$grupo['slug']}/solicitacoes-pendentes"); ?>"><i class="users icon"></i> Solicitações pendentes</a> 
               </td>
             </tr>
             <?php endif; ?>

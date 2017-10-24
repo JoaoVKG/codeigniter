@@ -27,7 +27,7 @@ if(validation_errors() != '') {
           <?php $index = 0; ?>
           <?php foreach ($grupos as $grupo_item): ?>
             <tr>
-              <td><a href="grupo/<?php echo $grupo_item['slug'];?>"><?php echo $grupo_item['nome'];?></a></td>
+              <td><a href="<?= base_url("grupo/{$grupo_item['slug']}"); ?>"><?php echo $grupo_item['nome'];?></a></td>
 
               <td><?php echo($area_grupo[$index]['NOME_GRANDE_AREA']);?></td>
               <?php
@@ -41,7 +41,7 @@ if(validation_errors() != '') {
               ?>
 
               <td><?php echo $area_subarea_especialidade;?></td>
-              <?php $acao = '<td><a href="enviarsolicitacao/'.$grupo_item['id_grupo'].'"><i class="sign in icon"></i> Enviar solicitação</a></td>';?>
+              <?php $acao = '<td><a href="'. base_url("enviarsolicitacao/{$grupo_item['id_grupo']}").'"><i class="sign in icon"></i> Enviar solicitação</a></td>';?>
               <?php for ($i = 0; $i < sizeof($grupos); $i++) {
                 if(array_key_exists($i, $solicitacoes) && $solicitacoes[$i]['id_grupo'] == $grupo_item['id_grupo']) {
                   if($solicitacoes[$i]['aprovado'] == true) {
@@ -123,7 +123,7 @@ if(validation_errors() != '') {
       <div class="field">
         <label class="float-left">Instituição de ensino</label>
         <div class="ui search selection dropdown">
-          <input type="hidden" name="instituicao" class="input instituicao" required>
+          <input type="hidden" name="instituicao" class="input instituicao" value="" required>
           <i class="dropdown icon"></i>
           <div class="default text instituicao">Selecione sua instituição</div>
           <div class="menu instituicoes">
@@ -135,7 +135,7 @@ if(validation_errors() != '') {
         </div>
       </div>
 
-      <div class="ui form modal instituicao">
+      <div class="ui form warning modal instituicao">
         <div class="header">Cadastre uma instituição</div>
         <div class="content instituicoes">
           <!-- echo pagina de cadastro -->
@@ -240,6 +240,8 @@ $('.ui.button.cor').on('click', function() {
 
 // select da instituição
 $('.ui.selection.dropdown').dropdown({
+  // forceSelection: false,
+  // selectOnKeydown: false,
   fullTextSearch: true,
   message: {
     noResults: 'Nenhum resultado encontrado.'
@@ -355,6 +357,7 @@ $(".cadastro.instituicao").on("click", function() {
                 url: '<?php echo base_url("index.php/instituicao/cadastrarInstituicao"); ?>',
                 data: {'nome_instituicao': nome_fantasia},
                 success: function(result) {
+                  $('.menu.instituicoes').load('<?php echo base_url("index.php/instituicao/index"); ?>');
                   $('.default.text.instituicao').removeClass('default');
                   $('.text.instituicao').text(nome_fantasia);
                   $('.input.instituicao').val(nome_fantasia);
@@ -388,7 +391,7 @@ $(".cadastro.instituicao").on("click", function() {
 });
 
 //atualiza a lista de instituições
-$(".ui.input.search.selection.dropdown").on("click", function() {
+$(".ui.search.selection.dropdown").on("click", function() {
   $('.menu.instituicoes').load('<?php echo base_url("index.php/instituicao/index"); ?>');
 });
 

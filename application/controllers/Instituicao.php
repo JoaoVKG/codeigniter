@@ -35,7 +35,8 @@ class Instituicao extends CI_Controller {
   }
 
   public function pesquisaCnpj() {
-    $dados = CnpjGratis::consulta($_POST['cnpj_instituicao'], $_POST['captcha'], $_POST['cookie']);
+    $cnpj = preg_replace('/[^0-9]/', '', $_POST['cnpj_instituicao']);
+    $dados = CnpjGratis::consulta($cnpj, $_POST['captcha'], $_POST['cookie']);
     if($dados) {
       echo $dados['nome_fantasia'];
     } else {

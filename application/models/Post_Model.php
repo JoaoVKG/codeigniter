@@ -48,7 +48,8 @@ class Post_Model extends CI_Model {
       'id_grupo' => $id_grupo,
       'id_usuario' => $_SESSION['usuario_logado']['id_usuario']
     );
-    return $this->db->insert('post', $data);
+    $this->db->insert('post', $data);
+    return $this->db->insert_id();
   }
 
   public function updatePost() {

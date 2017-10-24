@@ -56,15 +56,18 @@ $route['logout'] = 'usuario/logout';
 $route['cadastro'] = 'usuario/cadastro';
 $route['home'] = 'usuario/index';
 $route['enviarsolicitacao/(:num)'] = 'usuario/solicitaentrada/$1';
+$route['editar-perfil'] = "usuario/editarusuario";
 
 // grupos
 $route['primeiros-passos'] = 'grupos/primeirospassos';
 $route['entre-em-um-grupo'] = 'grupos/primeirospassos';
 $route['grupos'] = 'grupos/index';
+$route['procurar-grupos'] = 'grupos/procurargrupos';
 $route['grupo/(:any)'] = 'grupos/grupo/$1';
 $route['grupo/(:any)/participantes'] = 'grupos/participantes/$1';
 $route['grupo/(:any)/sobre'] = 'grupos/sobre/$1';
 $route['grupo/(:any)/contato'] = 'grupos/contato/$1';
+$route['grupo/(:any)/enviar-email-contato'] = 'grupos/enviarEmail/$1';
 
 // posts
 $route['grupo/(:any)/post/(:num)'] = 'posts/index/$1/$2';

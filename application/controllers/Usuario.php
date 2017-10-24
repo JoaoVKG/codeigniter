@@ -57,6 +57,40 @@ class Usuario extends CI_Controller {
     }
   }
 
+  public function editarusuario() {
+    if (isset($_SESSION['usuario_logado']['nome'])) {
+      $this->load->library('form_validation');
+      $this->form_validation->set_rules('nome', 'nome', 'required');
+      $this->form_validation->set_rules('sobrenome', 'sobrenome', 'required');
+      if ($this->input->post('email') == $_SESSION['usuario_logado']['email']) {
+        $this->form_validation->set_rules('email', 'email', 'required|valid_email');        
+      } else {
+        $this->form_validation->set_rules('email', 'email', 'required|valid_email|is_unique[usuario.email]', array('is_unique' => 'Esse %s já está cadastrado.'));
+      }
+     
+      $data['usuario'] = $this->usuario_model->getUsuarioById($_SESSION['usuario_logado']['id_usuario']);
+      $data['title'] = "Editar perfil";
+
+      if($this->form_validation->run() === FALSE) {
+        $this->load->view('templates/header', $data);
+        $this->load->view('usuario/editar');
+      } else {
+        $editado = $this->usuario_model->updateUsuario();
+        if($editado) {
+          $usuario = $this->usuario_model->getUsuarioById($_SESSION['usuario_logado']['id_usuario']);
+          $this->session->set_userdata("usuario_logado", $usuario);
+          $_SESSION['sucesso_perfil'] = true;
+          $this->session->mark_as_flash('sucesso_perfil');
+          redirect('home', 'refresh');
+        }  else {
+          $this->load->view('templates/header', $data);
+          $this->load->view('usuario/editar');
+        }
+      }
+
+    }
+  }
+
   public function check_email_senha() {
     $usuario = $this->usuario_model->getUsuarioByEmail();
     $email = $usuario['email'];

@@ -74,9 +74,9 @@ class Grupo_Model extends CI_Model {
     $id_grupo = $this->db->insert_id();
 
     $grupo_usuario = array(
-      'id_usuario' => $_SESSION['usuario_logado']['id_usuario'],
+      'id_usuario' => (int)$_SESSION['usuario_logado']['id_usuario'],
       'id_grupo' => $id_grupo,
-      'id_papel' => $this->input->post('posicao_grupo'),
+      'id_papel' => (int)$this->input->post('posicao_grupo'),
       'aprovado' => true,
       'pode_editar_grupo' => true
     );
@@ -100,6 +100,39 @@ class Grupo_Model extends CI_Model {
     );
     $this->db->where('id_grupo', $id_grupo);
     $this->db->update('grupo', $data);
+  }
+
+  public function deleteGrupo($id_grupo) {
+    $this->db->where('id_grupo', $id_grupo);
+    $this->db->delete('grupo');
+  }
+
+  public function toggleNotificacao($id_grupo, $id_usuario) {
+    $notificacao = $this->grupo_model->getNotificaoByIdGrupoIdUsuario($id_grupo, $id_usuario);
+
+    if ($notificacao) {
+      $this->db->where('id_usuario', $id_usuario);
+      $this->db->where('id_grupo', $id_grupo);
+      $this->db->delete('notificacoes');
+      return false;
+    } else {
+      $data = array(
+        'id_usuario' => $id_usuario,
+        'id_grupo' => $id_grupo
+      );
+      $this->db->insert('notificacoes', $data);
+      return true;
+    }
+  }
+
+  public function getNotificaoByIdGrupoIdUsuario($id_grupo, $id_usuario) {
+    $query = $this->db->get_where('notificacoes', array('id_grupo' => $id_grupo, 'id_usuario' => $id_usuario));
+    return $query->row_array();
+  }
+
+  public function getNotificaoByIdGrupo($id_grupo) {
+    $query = $this->db->get_where('notificacoes', array('id_grupo' => $id_grupo));
+    return $query->result_array();
   }
 
 }

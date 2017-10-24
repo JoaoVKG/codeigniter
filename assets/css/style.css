@@ -24,6 +24,11 @@
 }
 
 /*CONTEÚDO*/
+.delete-btn {
+  position: absolute !important;
+  bottom: 0px;
+  border-radius: 0px !important;
+}
 .quill-fix {
   white-space: normal !important;
 }

@@ -18,7 +18,11 @@ class CnpjGratis {
     {
         $data = self::request('http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/Cnpjreva_Solicitacao2.asp');
 
-        $cookie = $data['headers']['Set-Cookie'];
+        if (isset($data['headers']['Set-Cookie'])) {
+            $cookie = $data['headers']['Set-Cookie'];
+        } else {
+            return false;
+        }
 
         $image = self::request('http://www.receita.fazenda.gov.br/pessoajuridica/cnpj/cnpjreva/captcha/gerarCaptcha.asp', [], [
             "Pragma: no-cache",

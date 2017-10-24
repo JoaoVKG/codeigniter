@@ -20,6 +20,8 @@ class Grupos extends CI_Controller {
   public function grupo($slug) {
     $data['grupo'] = $this->grupo_model->getgrupobyslug($slug);
     $data['posts'] = $this->post_model->getPrimeiros5PostsByGrupo($slug);
+    if (isset($_SESSION['usuario_logado']['id_usuario']))
+    $data['notificacao'] = $this->grupo_model->getNotificaoByIdGrupoIdUsuario($data['grupo']['id_grupo'], $_SESSION['usuario_logado']['id_usuario']);
     if(empty($data['grupo'])) {
       redirect('/', 'refresh');
     }
@@ -60,6 +62,29 @@ class Grupos extends CI_Controller {
     $this->load->view('templates/header', $data);
     $this->load->view('grupos/contato', $data);
     $this->load->view('templates/footer');
+  }
+
+  public function enviarEmail($slug) {
+    $grupo = $this->grupo_model->getgrupobyslug($slug);
+    if(isset($_SESSION['usuario_logado']['nome'])) {
+      $email_from = $_SESSION['usuario_logado']['email'];
+      $nome_from = $_SESSION['usuario_logado']['nome'] . " " . $_SESSION['usuario_logado']['sobrenome'];
+    } else {
+      $email_from = $this->input->post('email');
+      $nome_from = $this->input->post('nome');
+    }
+    
+    $assunto = $this->input->post('assunto') . ' - Contato SGCGP - ' . $grupo['nome'];
+    $mensagem = $this->input->post('mensagem');
+    $this->email->from($email_from, $nome_from);
+    $this->email->subject($assunto);
+    $this->email->to($grupo['email_contato']); 
+    $this->email->message($mensagem);
+    if ($this->email->send()) {
+      $_SESSION['sucesso'] = true;
+      $this->session->mark_as_flash('sucesso');
+      redirect('/grupo/' . $grupo['slug'] . '/contato', 'refresh');
+    }
   }
 
   public function gerenciarparticipantes($slug) {
@@ -165,6 +190,24 @@ class Grupos extends CI_Controller {
     }
   }
 
+  public function procurargrupos() {
+    $this->load->model('area_model');
+    $this->load->model('instituicao_model');
+    $data['title'] = 'Procurar grupos';
+    $data['grupos'] = $this->grupo_model->getgrupos();
+    $data['instituicoes'] = $this->instituicao_model->getInstituicao();
+    $data['area_grupo'] = $this->getGruposAreas();
+    $this->load->view('templates/header', $data);
+    $this->load->view('usuario/procurargrupos');
+    $this->load->view('templates/footer');
+  }
+
+  public function alternarnotificacao() {
+    $id_grupo = $this->input->post('id_grupo');
+    $id_usuario = $this->input->post('id_usuario');
+    echo $this->grupo_model->toggleNotificacao($id_grupo, $id_usuario);
+  }
+
   public function getGruposAreas() {
     $grupos = $this->grupo_model->getgrupos();
     $areas = [];
@@ -218,6 +261,21 @@ class Grupos extends CI_Controller {
     if($data['aprovado']) {
       $this->grupo_model->updateGrupo();
       echo $this->input->post('link_grupo');
+    }
+  }
+
+  public function excluirgrupo() {
+    $this->load->model('usuario_model');    
+    if(isset($_SESSION['usuario_logado']['nome'])) {
+      $id_usuario = $_SESSION['usuario_logado']['nome'];
+      $id_grupo = $this->input->post('id_grupo');
+      $data['admin'] = $this->usuario_model->isAdministrador($id_grupo);
+      if ($data['admin']) {
+        $this->grupo_model->deleteGrupo($id_grupo);
+        echo true;
+      } else {
+        echo false;
+      }
     }
   }
 

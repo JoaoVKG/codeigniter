@@ -112,7 +112,7 @@ if(validation_errors() != '') {
         </div>
       </div>
 
-      <div class="ui form modal instituicao">
+      <div class="ui form warning modal instituicao">
         <div class="header">Cadastre uma instituição</div>
         <div class="content instituicoes">
           <!-- echo pagina de cadastro -->

@@ -53,7 +53,7 @@
               </div>
               <i class="dropdown icon"></i>
               <div class="menu">
-                <a href="/codeigniter/logout" class="item">Sair</a>
+                <a href="<?= base_url("login"); ?>" class="item">Sair</a>
               </div>
             </div>
           </div>

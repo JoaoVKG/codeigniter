@@ -144,10 +144,10 @@ if(isset($_SESSION['usuario_logado'])) {
       <a class="item" href="#grupos">Grupos</a>
       <div class="right menu">
         <div class="item">
-          <a href="login" class="ui inverted button">Entrar</a>
+          <a href="<?php echo base_url('login');?>" class="ui inverted button">Entrar</a>
         </div>
         <div class="item">
-          <a href="cadastro" class="ui inverted button">Cadastrar-se</a>
+          <a href="<?php echo base_url('cadastro');?>" class="ui inverted button">Cadastrar-se</a>
         </div>
       </div>
     </div>
@@ -205,7 +205,7 @@ if(isset($_SESSION['usuario_logado'])) {
             <?php $index = 0; ?>
             <?php foreach ($grupos as $grupo_item): ?>
               <tr>
-                <td><a href="grupo/<?php echo $grupo_item['slug'];?>"><?php echo $grupo_item['nome'];?></a></td>
+                <td><a href="<?= base_url("grupo/{$grupo_item['slug']}"); ?>"><?php echo $grupo_item['nome'];?></a></td>
 
                 <td><?php echo($area_grupo[$index]['NOME_GRANDE_AREA']);?></td>
                 <?php

@@ -19,7 +19,7 @@ if(!isset($_SESSION['usuario_logado']['nome'])) {
     </h3>
   </div>
 
-  <div class="ui center aligned segment home-link">
+  <div class="ui center aligned segment home-link" onclick="window.location='<?php echo base_url("procurar-grupos"); ?>'">
     <h3 class="ui icon header">
       <i class="icons">
         <i class="users icon"></i>

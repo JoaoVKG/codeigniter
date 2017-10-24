@@ -89,7 +89,23 @@ class Posts extends CI_Controller {
         $postagem = $this->post_model->setPost($data['grupo']['id_grupo']);
         if ($postagem) {
           $_SESSION['sucesso'] = true;
+          $_SESSION['id_post'] = $postagem;
           $this->session->mark_as_flash('sucesso');
+          $this->session->mark_as_flash('id_post');
+          $usuarios_notificados = $this->grupo_model->getNotificaoByIdGrupo($data['grupo']['id_grupo']);
+          foreach ($usuarios_notificados as $usuario_notificado) {
+            $usuario = $this->usuario_model->getUsuarioById($usuario_notificado['id_usuario']);
+            
+            $email_from = 'sgcgp.contato@gmail.com';
+            $nome_from = 'Notificação SGCGP';
+            $assunto = 'Nova postagem do grupo ' . $data['grupo']['nome'] . '!';
+            $mensagem = '<h1>O grupo que você segue fez uma nova postagem! Leia <a href="'. base_url("grupo/{$data['grupo']['slug']}/post/{$postagem}") .'">aqui</a>.</h1>';
+            $this->email->from($email_from, $nome_from);
+            $this->email->subject($assunto);
+            $this->email->to($usuario['email']); 
+            $this->email->message($mensagem);
+            $this->email->send();
+          }
           redirect("/grupo/{$slug}/criar-post");
         }
       }

@@ -12,6 +12,12 @@ class Usuario_Model extends CI_Model {
     return $usuario;
   }
 
+  public function getUsuarioById($id_usuario) {
+    $this->db->where("id_usuario", $id_usuario);
+    $usuario = $this->db->get("usuario")->row_array();
+    return $usuario;
+  }
+
   public function setUsuario() {
 
     $senha = $this->input->post('senha');
@@ -24,8 +30,28 @@ class Usuario_Model extends CI_Model {
       'email' => $this->input->post('email'),
       'senha' => $senha
     );
-
     return $this->db->insert('usuario', $data);
+  }
+
+  public function updateUsuario() {
+    $senha = $this->input->post('senha');
+    $opc = ['cost' => 12];
+
+    if (isset($senha)) {
+      $senha = password_hash($senha, PASSWORD_DEFAULT, $opc);
+    } else {
+      $senha = $_SESSION['usuario_logado']['senha'];
+    }
+
+    $data = array(
+      'nome' => $this->input->post('nome'),
+      'sobrenome' => $this->input->post('sobrenome'),
+      'email' => $this->input->post('email'),
+      'senha' => $senha
+    );
+    $this->db->where('id_usuario', $_SESSION['usuario_logado']['id_usuario']);
+    $this->db->update('usuario', $data);
+    return true;
   }
 
   public function setSolicitacaoUsuario($id_grupo) {
