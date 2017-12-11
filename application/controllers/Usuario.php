@@ -19,8 +19,8 @@ class Usuario extends CI_Controller {
     $this->load->library('form_validation');
     $data['title'] = 'Cadastro';
 
-    $this->form_validation->set_rules('nome', 'nome', 'required');
-    $this->form_validation->set_rules('sobrenome', 'sobrenome', 'required');
+    $this->form_validation->set_rules('nome', 'nome', 'required|strip_tags');
+    $this->form_validation->set_rules('sobrenome', 'sobrenome', 'required|strip_tags');
     $this->form_validation->set_rules('email', 'email', 'required|valid_email|is_unique[usuario.email]', array('is_unique' => 'Esse %s já está cadastrado.'));
     $this->form_validation->set_rules('senha', 'senha', 'required');
 
@@ -39,7 +39,7 @@ class Usuario extends CI_Controller {
       }
     }
   }
-
+  
   public function login() {
     $this->load->library('form_validation');
     $data['title'] = 'Login';
@@ -81,7 +81,7 @@ class Usuario extends CI_Controller {
           $this->session->set_userdata("usuario_logado", $usuario);
           $_SESSION['sucesso_perfil'] = true;
           $this->session->mark_as_flash('sucesso_perfil');
-          redirect('home', 'refresh');
+          redirect('home');
         }  else {
           $this->load->view('templates/header', $data);
           $this->load->view('usuario/editar');

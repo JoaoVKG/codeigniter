@@ -17,7 +17,7 @@
   <div class="ui clearing segment">
     <article class="post ql-editor quill-fix" data-id="<?= $post['id_post']?>">
       <h1 class="ui header"><a href="<?= base_url("grupo/{$grupo['slug']}/post/{$post['id_post']}");?>"><?= $post['titulo']?></a>
-        <div class="sub header">Escrito por <?= $post['nome'] . ' ' . $post['sobrenome']?> <p><?= strftime('%A, %d de %B de %Y', strtotime($post['data'])) ?></p></div>
+        <div class="sub header">Escrito por <?= $post['nome'] . ' ' . $post['sobrenome']?> <p><?= utf8_encode(strftime('%A, %d de %B de %Y', strtotime($post['data']))) ?></p></div>
       </h1>
       <?= $post['conteudo'] ?>
     </article>

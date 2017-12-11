@@ -21,7 +21,9 @@
                     </td>
                     
                     <td class="collapsing center aligned">
-                        <button class="ui button editar" data-id="<?= $post['id_post']; ?>" data-nome="<?=$post['titulo'];?>" data-conteudo="<?=$post['conteudo'];?>"><i class="pencil icon" style="margin: 0 !important;"></i></button>
+                        <button class="ui button editar" data-id="<?= $post['id_post'];?>">
+                            <i class="pencil icon" style="margin: 0 !important;"></i>
+                        </button>
                     </td>
                     
                     <td class="collapsing center aligned">
@@ -47,6 +49,19 @@
 </div>
 
 <script>
+
+var tableHeight = $('table').height();
+var bodyHeight = $('body').height();
+var middleContent = $('.middle-content');
+var adminContent = $('.admin-content');
+
+if (tableHeight > bodyHeight) {
+    middleContent.addClass('middle-content-table-out');
+    middleContent.removeClass('middle-content');
+    adminContent.addClass('admin-content-table-out');
+    adminContent.removeClass('admin-content');
+}
+
     var id;
     $('.button.remover').click(function() {
         id = $(this).data('id');

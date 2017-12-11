@@ -197,6 +197,7 @@ if(isset($_SESSION['usuario_logado'])) {
           <thead>
             <tr>
               <th>Nome</th>
+              <th>Instituição</th>
               <th>Grande área</th>
               <th>Área <i class="icon small chevron right"></i>Subárea <i class="icon small chevron right"></i>  Especialidade</th>
             </tr>
@@ -206,6 +207,18 @@ if(isset($_SESSION['usuario_logado'])) {
             <?php foreach ($grupos as $grupo_item): ?>
               <tr>
                 <td><a href="<?= base_url("grupo/{$grupo_item['slug']}"); ?>"><?php echo $grupo_item['nome'];?></a></td>
+
+                <td>
+                  <?php 
+                  $nome_instituicao;
+                  foreach ($instituicoes as $instituicao) {
+                    if ($instituicao['id_instituicao'] == $grupo_item['id_instituicao']) {
+                      $nome_instituicao = $instituicao['nome'];
+                    }
+                  }
+                  echo $nome_instituicao;
+                  ?>
+                </td>
 
                 <td><?php echo($area_grupo[$index]['NOME_GRANDE_AREA']);?></td>
                 <?php

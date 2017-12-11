@@ -18,14 +18,18 @@
 <body>
   <div class="site">
     <div class="ui sidebar inverted vertical menu">
+      <div class="item"><?=$grupo['nome']?></div>
       <a class="item" href="<?= base_url('home')?>">Voltar para o início</a>
       <div class="item"></div>
-      <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-posts')?>">Gerenciar postagens</a>
       <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/criar-post')?>">Escrever uma postagem</a>
+      <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-posts')?>">Gerenciar postagens</a>
       <?php if ($admin):?>
         <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/editar-grupo')?>">Editar informações do grupo</a>
         <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/solicitacoes-pendentes')?>">Solicitações pendentes <div class="ui label"><?=count($solicitacoes);?></div></a>
         <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-participantes')?>">Gerenciar participantes</a>
+      <?php endif;?>
+      <?php if ($admin) :?>
+        <div class="ui fluid negative button delete-btn excluir-grupo" data-nome="<?=$grupo['nome']?>">Excluir grupo</div>
       <?php endif;?>
     </div>
 
@@ -34,7 +38,7 @@
         <div class="ui container">
           <a class="item" onclick="$('.ui.sidebar').sidebar('toggle');">Opções</a>
           <div class="right menu">
-            <div class="ui item dropdown">
+            <div class="ui item dropdown" id="menu">
               <div class="text">
                 <?= $_SESSION['usuario_logado']['nome'];?>
               </div>
@@ -49,11 +53,13 @@
       </div>
 
       <div class="tablet or lower hidden ui vertical fixed inverted sticky menu top" style="float: left !important; left: 0px; width: 250px !important; height: 100% !important; margin-top: 0px;">
+        <div class="item"><?=$grupo['nome']?></div>
+        <div class="item"></div>
         <a class="item" href="<?= base_url('home')?>">Voltar para o início</a>
         <div class="item">
         </div>
-        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-posts')?>">Gerenciar postagens</a>
         <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/criar-post')?>">Escrever uma postagem</a>
+        <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/gerenciar-posts')?>">Gerenciar postagens</a>
         <?php if ($admin):?>
           <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/editar-grupo')?>">Editar informações do grupo</a>
           <a class="item opcao" href="<?= base_url('grupo/'.$grupo['slug'].'/solicitacoes-pendentes')?>">Solicitações pendentes <div class="ui label"><?=count($solicitacoes);?></div></a>
@@ -61,14 +67,16 @@
         <?php endif;?>
         <div class="item">
         </div>
-        <div class="ui fluid negative button delete-btn" id="excluir-grupo" data-nome="<?=$grupo['nome']?>">Excluir grupo</div>
+        <?php if ($admin) :?>
+          <div class="ui fluid negative button delete-btn excluir-grupo" data-nome="<?=$grupo['nome']?>">Excluir grupo</div>
+        <?php endif;?>
       </div>
 
-      <div class="ui small basic modal transition hidden">
-        <div class="ui icon header" id="modal-header">
+      <div class="ui small basic modal transition hidden" id="modal-excluir">
+        <div class="ui icon header" id="modal-header-excluir">
         </div>
         <div class="actions" style="text-align: center !important;">
-          <div class="ui red cancel inverted button">
+          <div class="ui red cancel inverted button" id="btn-excluir-grupo">
             <i class="trash icon"></i> Excluir
               </div>
           <div class="ui green ok inverted button">
@@ -76,29 +84,29 @@
           </div>
         </div>
       </div>
-
-      <script>
-        var id;
-        $('#excluir-grupo').click(function() {
-          var nome = $(this).data('nome');
-          $('#modal-header').html('<i class="user icon"></i> Você tem certeza que deseja excluir o grupo ' + nome + '? <br>Essa ação não poderá ser revertida.');
-          $('.ui.basic.modal').modal({
-            closable: true
-          }).modal('show');
-        })
-
-        $('.red.cancel').click(function() {
-          $.ajax({
-            type: 'POST',
-            url: '<?php echo base_url("index.php/grupos/excluirgrupo");?>',
-            data: {'id_grupo':<?=$grupo['id_grupo']?>},
-            success: function(result) {
-              if (result) {
-                location.href = "<?=base_url('home');?>";
-              }
-            }
+      <?php if ($admin) :?>
+        <script>
+          var id;
+          $('.excluir-grupo').click(function() {
+            var nome = $(this).data('nome');
+            $('#modal-header-excluir').html('<i class="user icon"></i> Você tem certeza que deseja excluir o grupo ' + nome + '? <br>Essa ação não poderá ser revertida.');
+            $('#modal-excluir').modal({
+              closable: true
+            }).modal('show');
           })
-        })
-      </script>
 
+          $('#btn-excluir-grupo').click(function() {
+            $.ajax({
+              type: 'POST',
+              url: '<?php echo base_url("index.php/grupos/excluirgrupo");?>',
+              data: {'id_grupo':<?=$grupo['id_grupo']?>},
+              success: function(result) {
+                if (result) {
+                  location.href = "<?=base_url('home');?>";
+                }
+              }
+            })
+          })
+        </script>
+      <?php endif;?>
       <div class="middle-content padding margin">

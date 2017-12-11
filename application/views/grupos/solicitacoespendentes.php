@@ -27,31 +27,44 @@
 	</table>
 </div>
 
-<div class="ui small basic modal transition hidden">
-	<div class="ui icon header" id="modal-header">
+<div class="ui small basic modal transition hidden" id="solicitacoes-pendentes">
+	<div class="ui icon header" id="modal-header-solicitacoes">
 	</div>
 	<div class="actions" style="text-align: center !important;">
-		<div class="ui red cancel inverted button">
+		<div class="ui red cancel inverted button" id="rejeitar-usuario">
 			<i class="remove icon"></i> Não
         </div>
-		<div class="ui green ok inverted button">
+		<div class="ui green ok inverted button" id="aprovar-usuario">
 			<i class="checkmark icon"></i> Sim
 		</div>
 	</div>
 </div>
 
 <script>
+	
+var tableHeight = $('table').height();
+var bodyHeight = $('body').height();
+var middleContent = $('.middle-content');
+var adminContent = $('.admin-content');
+
+if (tableHeight > bodyHeight) {
+    middleContent.addClass('middle-content-table-out');
+    middleContent.removeClass('middle-content');
+    adminContent.addClass('admin-content-table-out');
+    adminContent.removeClass('admin-content');
+}
+
 	var id;
     $('.button.aprovar').click(function() {
         id = $(this).data('id');
         var nome = $(this).data('nome');
-        $('#modal-header').html('<i class="user icon"></i>  Aprovar ' + nome + '?');
-        $('.ui.basic.modal').modal({
+        $('#modal-header-solicitacoes').html('<i class="user icon"></i>  Aprovar ' + nome + '?');
+        $('#solicitacoes-pendentes').modal({
 			closable: true
 		}).modal('show');
     })
 
-	$('.button.ok').click(function() {
+	$('#aprovar-usuario').click(function() {
 		$.ajax({
 			type: 'POST',
 			url: '<?php echo base_url("index.php/usuario/aceitarsolicitacao"); ?>',
@@ -64,7 +77,7 @@
 		})
 	})
 
-	$('.button.cancel').click(function() {
+	$('#rejeitar-usuario').click(function() {
 		$.ajax({
 			type: 'POST',
 			url: '<?php echo base_url("index.php/usuario/recusarsolicitacao"); ?>',

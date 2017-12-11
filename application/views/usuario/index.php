@@ -46,3 +46,31 @@ if(!isset($_SESSION['usuario_logado']['nome'])) {
   </div>
 
 </div>
+
+<?php if(isset($_SESSION['sucesso_perfil'])): ?>
+<script>
+    
+    $(document).ready(function() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "2500",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+    
+        toastr["success"]("Perfil alterado.", "Sucesso!");
+    })
+
+</script>
+<?php endif;?>

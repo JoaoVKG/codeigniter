@@ -59,6 +59,18 @@ img {
   width: 100% !important;
 }
 
+.middle-content-table-out {
+  min-height: 100% !important;
+  overflow: auto;
+}
+
+.admin-content-table-in {
+  flex: 1 0 auto; /* 2 */
+  padding: var(--space) var(--space) 0;
+  height: 100% !important;
+  width: 100% !important;
+}
+
 .admin-edit-content {
   flex: 1 0 auto; /* 2 */
   padding: var(--space) var(--space) 0;

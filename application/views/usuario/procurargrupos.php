@@ -17,9 +17,19 @@
         <?php $index = 0; ?>
         <?php foreach ($grupos as $grupo_item): ?>
           <tr>
-            <td><a href="<?= base_url("grupo/{$grupo['slug']}"); ?>"><?php echo $grupo_item['nome'];?></a></td>
+            <td><a href="<?= base_url("grupo/{$grupo_item['slug']}"); ?>"><?php echo $grupo_item['nome'];?></a></td>
 
-            <td><?php echo $grupo_item['id_instituicao'];?></td>
+            <td>
+              <?php 
+              $nome_instituicao;
+              foreach ($instituicoes as $instituicao) {
+                if ($instituicao['id_instituicao'] == $grupo_item['id_instituicao']) {
+                  $nome_instituicao = $instituicao['nome'];
+                }
+              }
+              echo $nome_instituicao;
+              ?>
+            </td>
 
             <td><?php echo($area_grupo[$index]['NOME_GRANDE_AREA']);?></td>
             <?php

@@ -17,6 +17,8 @@
   <script src="<?php echo base_url('semantic/dist/semantic.min.js'); ?>"></script>
   <link type="text/css" rel="stylesheet" href="<?php echo base_url('assets/css/quill.snow.css'); ?>"  media="screen,projection"/>
   <script type="text/javascript" src="<?php echo base_url('assets/js/quill.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/js/toastr.min.js'); ?>"></script>
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/toastr.min.css'); ?>">
 </head>
 <body class="site">
 

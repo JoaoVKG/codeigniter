@@ -1,7 +1,7 @@
 <?php
 
 class Post_Model extends CI_Model {
-  public $limitePosts = 2;
+  public $limitePosts = 5;
   
   public function __construct() {
     $this->load->database();
@@ -26,12 +26,12 @@ class Post_Model extends CI_Model {
   }
 
   public function getPostsByUserIdGrupoId($id_usuario, $id_grupo) {
-    $query = $this->db->query("select u.nome, u.sobrenome, p.id_post, p.titulo, p.conteudo, p.data from post p, grupo g, usuario u where p.id_grupo = " . $id_grupo . " and p.id_usuario = " . $id_usuario . " and p.id_usuario = u.id_usuario");
+    $query = $this->db->query("select u.nome, u.sobrenome, p.id_post, p.titulo, p.conteudo, p.data from post p, usuario u where p.id_grupo = " . $id_grupo . " and p.id_usuario = " . $id_usuario . " and p.id_usuario = u.id_usuario");
     return $query->result_array();
   }
 
   public function getPostsByAdminIdGrupoId($id_usuario, $id_grupo) {
-    $query = $this->db->query("select u.nome, u.sobrenome, p.id_post, p.titulo, p.conteudo, p.data from post p, grupo g, usuario u where p.id_grupo = " . $id_grupo . " and p.id_usuario = u.id_usuario");
+    $query = $this->db->query("select u.nome, u.sobrenome, p.id_post, p.titulo, p.conteudo, p.data from post p, usuario u where p.id_grupo = " . $id_grupo . " and p.id_usuario = u.id_usuario");
     return $query->result_array();
   }
 

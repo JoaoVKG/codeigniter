@@ -12,6 +12,8 @@ class Pages extends CI_Controller {
     if($page == 'index') {
       $this->load->model('grupo_model');
       $this->load->model('area_model');
+      $this->load->model('instituicao_model');
+      $data['instituicoes'] = $this->instituicao_model->getInstituicao();
       $data['grupos'] = $this->grupo_model->getgrupos();
       $data['area_grupo'] = $this->getGruposAreas();
     }

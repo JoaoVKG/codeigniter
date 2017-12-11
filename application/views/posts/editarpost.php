@@ -38,11 +38,11 @@
   <?php if(isset($_SESSION['sucesso'])) : ?>
     <div class="ui positive message">
       <div class="header">
-      Postagem feita com sucesso!
+      Postagem atualizada com sucesso!
       </div>
       <p>Sua postagem está disponível para que outras pessoas possam lê-la.</p>
       <p>
-      Você pode acessar ela por esse <a href="">link</a>.
+      Você pode acessar ela por esse <a href="<?= base_url('grupo/'.$grupo['slug'].'/post/'.$post['id_post'])?>">link</a>.
       </p>
     </div>
   <?php endif;?>

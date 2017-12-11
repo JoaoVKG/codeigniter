@@ -25,8 +25,8 @@ class Usuario_Model extends CI_Model {
     $senha = password_hash($senha, PASSWORD_DEFAULT, $opc);
 
     $data = array(
-      'nome' => $this->input->post('nome'),
-      'sobrenome' => $this->input->post('sobrenome'),
+      'nome' => $this->input->post('nome', TRUE),
+      'sobrenome' => $this->input->post('sobrenome', TRUE),
       'email' => $this->input->post('email'),
       'senha' => $senha
     );
@@ -37,7 +37,7 @@ class Usuario_Model extends CI_Model {
     $senha = $this->input->post('senha');
     $opc = ['cost' => 12];
 
-    if (isset($senha)) {
+    if ($senha != null || $senha != '') {
       $senha = password_hash($senha, PASSWORD_DEFAULT, $opc);
     } else {
       $senha = $_SESSION['usuario_logado']['senha'];

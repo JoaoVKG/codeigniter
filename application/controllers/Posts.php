@@ -25,7 +25,7 @@ class Posts extends CI_Controller {
       echo '
       <article class="post ql-editor quill-fix" data-id="'.$post_carregado['id_post'].'">
       <h2 class="ui header"><a href="'.base_url("grupo/{$slug}/post/{$post_carregado['id_post']}") . '">'.$post_carregado['titulo'].'</a>
-        <div class="sub header">Escrito por ' . $post_carregado['nome'] . ' ' . $post_carregado['sobrenome'] . '<p>' . strftime('%A, %d de %B de %Y', strtotime($post_carregado['data'])) . '</p></div>
+        <div class="sub header">Escrito por ' . $post_carregado['nome'] . ' ' . $post_carregado['sobrenome'] . '<p>' . utf8_encode(strftime('%A, %d de %B de %Y', strtotime($post_carregado['data']))) . '</p></div>
       </h2>
       '. $post_carregado['conteudo'] .
       '</article>
@@ -151,6 +151,8 @@ class Posts extends CI_Controller {
 
   public function editarPostagem() {
     $this->post_model->updatePost();
+    $_SESSION['sucesso'] = true;
+    $this->session->mark_as_flash('sucesso');
     echo true;
   }
 }

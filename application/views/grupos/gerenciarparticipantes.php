@@ -19,7 +19,7 @@
 					<?= $participante['email']; ?>
 				</td>
 				<td class="collapsing">
-                    <select class="ui dropdown input-papel" data-id="<?= $participante['id_usuario']; ?>" data->
+                    <select class="ui dropdown input-papel dropdown-papel" data-id="<?= $participante['id_usuario']; ?>">
                         <option value="">Papel'</option>
                         <?php if($participante['id_papel'] == 1):?>
                             <option selected value="1">Líder</option>
@@ -40,30 +40,43 @@
 	</table>
 </div>
 
-<div class="ui small basic modal transition hidden">
-	<div class="ui icon header" id="modal-header">
+<div class="ui small basic modal transition hidden" id="gerenciar-participantes">
+	<div class="ui icon header" id="modal-header-gerenciar">
 	</div>
 	<div class="actions" style="text-align: center !important;">
-		<div class="ui red cancel inverted button">
+		<div class="ui red cancel inverted button" id="nao-excluir-usuario">
 			<i class="remove icon"></i> Não
         </div>
-		<div class="ui green ok inverted button">
+		<div class="ui green ok inverted button" id="excluir-usuario">
 			<i class="checkmark icon"></i> Sim
 		</div>
 	</div>
 </div>
 
 <script>
+	
+var tableHeight = $('table').height();
+var bodyHeight = $('body').height();
+var middleContent = $('.middle-content');
+var adminContent = $('.admin-content');
+
+if (tableHeight > bodyHeight) {
+    middleContent.addClass('middle-content-table-out');
+    middleContent.removeClass('middle-content');
+    adminContent.addClass('admin-content-table-out');
+    adminContent.removeClass('admin-content');
+}
+
 	var id;
     $('.button.remover').click(function() {
         id = $(this).data('id');
         var nome = $(this).data('nome');
-        $('#modal-header').html('<i class="user icon"></i>  Remover ' + nome + ' do grupo?');
-        $('.ui.basic.modal').modal('show');
+        $('#modal-header-gerenciar').html('<i class="user icon"></i>  Remover ' + nome + ' do grupo?');
+        $('#gerenciar-participantes').modal('show');
         
     })
 
-	$('.button.ok').click(function() {
+	$('#excluir-usuario').click(function() {
 		$.ajax({
 			type: 'POST',
 			url: '<?php echo base_url("index.php/usuario/removeparticipante"); ?>',
@@ -77,7 +90,7 @@
 		})
 	})
 
-    $('.button.cancel').click(function() {
+    $('#nao-excluir-usuario').click(function() {
         $('.ui.basic.modal').modal('close');
     })
 

@@ -51,10 +51,13 @@ body > .grid {
           <input type="email" name="email" placeholder="Email" value="<?=$usuario['email']?>" required/>
         </div>
       </div>
-      <div class="field">
+      <div id="change-pass" class="ui message" style="text-align: center !important; cursor: pointer">
+        <a class="ui">Clique aqui para alterar sua senha</a>
+      </div>
+      <div class="field" id="field_senha" hidden>
         <div class="ui left icon input">
           <i class="lock icon"></i>
-          <input type="password" name="senha" placeholder="Senha"/>
+          <input type="password" name="senha" placeholder="Nova senha"/>
         </div>
       </div>
       <button class="ui fluid button grey" type="submit">Editar</button>
@@ -68,3 +71,8 @@ body > .grid {
 
   </div>
 </div>
+<script>
+  $('#change-pass').click(function() {
+    $('#field_senha').toggle();
+  })
+</script>
